@@ -1,3 +1,14 @@
 export const basicModulesPath = './modules';
 
-export const testVal = '1';
+export enum ModuleContentTypes {
+    Execute,
+    Load,
+};
+
+export enum ModuleExecuteEvents {
+    OnPreLoad = 'preLoaded',
+    OnDbLoad = 'dbLoaded',
+    OnPostLoad = 'postLoaded',
+};
+
+export const moduleDataName = 'data';
