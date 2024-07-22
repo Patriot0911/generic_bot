@@ -13,5 +13,10 @@ export default class testEnt {
     @Column({
         type: 'varchar',
     })
+    text: string;
+
+    @Column({
+        type: 'varchar',
+    })
     description: string;
 };

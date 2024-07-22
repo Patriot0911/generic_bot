@@ -1,12 +1,11 @@
 import { basicModulesPath, ModuleContentTypes, moduleDataName } from '@/constants';
 import { IExecuteQueue, IParsedModules, TModuleContentInfo } from '@/types/client';
 import fs from 'node:fs/promises';
-import path from 'path';
 
 const modulesParser = async () => {
     const modulesList: IParsedModules[] = [],
         executeQueue: IExecuteQueue[] = [];
-    const rootPath = path.resolve('./src');
+    const rootPath =  __dirname.concat('/..');
     const moduleFilesList = await fs.readdir(`${rootPath}/${basicModulesPath}`);
     for(const module of moduleFilesList) {
         const path = basicModulesPath.concat('/', module);
@@ -15,7 +14,7 @@ const modulesParser = async () => {
             if(file === moduleDataName)
                 continue;
             const filePath = path.concat('/', file);
-            const fileContent = await import(`@/${filePath}`);
+            const fileContent = await import(`../${filePath}`);
             const {
                 default: callback,
                 contentInfo,

@@ -2,7 +2,7 @@ import { IModClientOptions, IModuleCallback } from '@/types/client';
 import modulesParser from '@/utils/modulesParser';
 import { ModuleExecuteEvents } from '@/constants';
 import { Client, Collection, } from 'discord.js';
-import AppDataSource from '@/datasource';
+import AppDataSource from '@/dbDataSource';
 import EventEmitter from 'node:events';
 import { DataSource } from 'typeorm';
 
@@ -30,8 +30,7 @@ class modClient extends Client {
     };
 
     protected async connectDb() {
-        const appDataSource = AppDataSource();
-        this.dataSource = await appDataSource.initialize();
+        this.dataSource = await AppDataSource.initialize();
     };
 
     public async build() {
