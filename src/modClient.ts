@@ -14,15 +14,33 @@ class modClient extends Client {
         this.modules = new Collection();
     };
 
-    async build() {
+    public getModulesList() {
+        const keys = Array.from(this.modules.keys());
+        const names = keys.map(item => item.split(':')[0]);
+        const uniqNames = [...new Set(names)];
+        return uniqNames;
+    };
+
+    public triggerEvent(eventName: ModuleExecuteEvents, ...args: any) {
+        this.eventEmitter.emit(eventName, this, ...args);
+    };
+
+    protected async connectDb() {
+        // const dataSource = await AppDataSource.initialize();
+    };
+
+    public async build() {
         const { executeQueue, modulesList, } = await modulesParser();
-        for(const { name, callback, } of modulesList) {
-            this.modules.set(name, callback);
-        };
         for(const { event, callback, } of executeQueue) {
             this.eventEmitter.on(event, callback);
         };
-        this.eventEmitter.emit(ModuleExecuteEvents.OnPreLoad, this);
+        this.triggerEvent(ModuleExecuteEvents.OnPreLoad);
+        for(const { name, callback, } of modulesList) {
+            this.modules.set(name, callback);
+        };
+        this.triggerEvent(ModuleExecuteEvents.OnModulesLoad);
+        this.connectDb();
+        this.triggerEvent(ModuleExecuteEvents.OnDbLoad);
     };
 };
 

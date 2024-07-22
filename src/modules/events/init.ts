@@ -1,15 +1,14 @@
 import { ModuleContentTypes, ModuleExecuteEvents, } from '@/constants';
 import { TModuleContentInfo } from '@/types/client';
 import modClient from '@/modClient';
+import { ready } from './data';
 
-export default function  (client: modClient) {
-    client.on(
-        'ready', (client) => console.log(client)
-    );
+export default function (cl: modClient) {
+    cl.on('ready', ready);
 };
 
 export const contentInfo: TModuleContentInfo = {
     name: 'onReady',
     type: ModuleContentTypes.Execute,
-    event: ModuleExecuteEvents.OnDbLoad,
+    event: ModuleExecuteEvents.OnModulesLoad,
 };

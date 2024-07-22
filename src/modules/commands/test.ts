@@ -1,7 +1,7 @@
 import { ModuleContentTypes, } from "@/constants";
 import { TModuleContentInfo } from "@/types/client";
 
-export default function testFunc () {
+export default function () {
     console.log('Hello world');
 };
 

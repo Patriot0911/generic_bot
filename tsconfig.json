@@ -5,9 +5,8 @@
 
         "outDir": "dist",
         "rootDir": "./src/",
-
         "strict": true,
-        "sourceMap": false,
+        "sourceMap": true,
 
         "skipLibCheck": true,
         "importHelpers": true,
@@ -15,8 +14,10 @@
         "esModuleInterop": true,
         "resolveJsonModule": true,
         "moduleResolution": "node",
+        "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "allowSyntheticDefaultImports": true,
+        "strictPropertyInitialization": false,
         "forceConsistentCasingInFileNames": true,
 
         "typeRoots": [
