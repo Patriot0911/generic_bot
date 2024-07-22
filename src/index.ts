@@ -1,5 +1,4 @@
 import 'dotenv/config';
-import 'reflect-metadata';
 import modClient from '@/modClient';
 import { intents, ModuleExecuteEvents } from '@/constants';
 
