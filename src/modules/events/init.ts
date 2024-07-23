@@ -1,14 +1,15 @@
 import { ModuleContentTypes, ModuleExecuteEvents, } from '@/constants';
 import { TModuleContentInfo } from '@/types/client';
+import { ready, voiceUpdate, } from './data';
 import modClient from '@/modClient';
-import { ready } from './data';
 
-export default function (cl: modClient) {
-    cl.on('ready', ready);
+export default function (client: modClient) {
+    client.on('ready', ready);
+    client.on('voiceStateUpdate', voiceUpdate);
 };
 
 export const contentInfo: TModuleContentInfo = {
-    name: 'onReady',
+    name: 'initEvents',
     type: ModuleContentTypes.Execute,
     event: ModuleExecuteEvents.OnModulesLoad,
 };

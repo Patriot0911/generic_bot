@@ -6,11 +6,7 @@ import { CommandType, } from './data/constants';
 import modClient from '@/modClient';
 import fs from 'node:fs/promises';
 
-interface ICommandsToUpload {
-    [key: string]: SlashCommandBuilder[];
-};
-
-export default async function (client: modClient) {
+export default async function (_: modClient) {
     const commandsList = await fs.readdir(__dirname.concat('/data/info'));
     const globalCommands: SlashCommandBuilder[] = [];
     for(const command of commandsList) {
