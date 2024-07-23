@@ -1,7 +1,8 @@
 import { SlashCommandBuilder } from "discord.js"
+import { CommandType } from "../constants";
 
 const command: SlashCommandBuilder = new SlashCommandBuilder()
-    .setName("ping")
+    .setName('ping')
     .setNameLocalizations({
         'uk': 'test',
     });
@@ -10,6 +11,6 @@ const command: SlashCommandBuilder = new SlashCommandBuilder()
 export default {
     command,
     extraInfo: {
-        type: 'guild',
+        type: CommandType.GUILD,
     },
 };
