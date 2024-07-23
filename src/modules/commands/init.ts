@@ -1,13 +1,18 @@
 import { ModuleContentTypes, ModuleExecuteEvents, } from '@/constants';
 import { TModuleContentInfo } from '@/types/client';
-import commandLoader from './data/commandLoader';
+import commandLoader from './data/commandsLoader';
+import { SlashCommandBuilder } from 'discord.js';
 import { CommandType, } from './data/constants';
 import modClient from '@/modClient';
 import fs from 'node:fs/promises';
-import path from 'node:path';
+
+interface ICommandsToUpload {
+    [key: string]: SlashCommandBuilder[];
+};
 
 export default async function (client: modClient) {
     const commandsList = await fs.readdir(__dirname.concat('/data/info'));
+    const globalCommands: SlashCommandBuilder[] = [];
     for(const command of commandsList) {
         const {
             default: commandData,
@@ -18,13 +23,21 @@ export default async function (client: modClient) {
         } = commandData;
         if(!Object.values(CommandType).includes(extraInfo.type))
             throw new Error('Unknown command type');
+        const commandToPut = commandStruct.toJSON(); // validate
+        if(extraInfo.type === CommandType.GLOBAL) {
+            globalCommands.push(commandToPut);
+            continue;
+        };
         const loader = commandLoader[<CommandType> extraInfo.type];
         if(!loader)
             throw new Error('Command loader not found');
-        const commandName =
-            extraInfo.name ? extraInfo.name : command.split(path.extname(command))[0];
-        loader(commandName, commandStruct);
+        const guild = extraInfo.guild;
+        await loader([commandToPut], guild); // rework
     };
+    if(globalCommands.length < 1)
+        return;
+    const loader = commandLoader[CommandType.GLOBAL];
+    await loader(globalCommands);
 };
 
 export const contentInfo: TModuleContentInfo = {

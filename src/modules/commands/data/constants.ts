@@ -1,4 +1,4 @@
 export enum CommandType {
-    GUILD,
-    GLOBAL,
+    GUILD = 'guild',
+    GLOBAL = 'global',
 };

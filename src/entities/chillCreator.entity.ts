@@ -1,22 +1,27 @@
 import { Column, Entity, PrimaryGeneratedColumn, } from 'typeorm';
 
 @Entity()
-export default class testEnt {
+export default class chillCreator {
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column({
         type: 'varchar',
     })
-    name: string;
+    channelId: string;
 
     @Column({
         type: 'varchar',
     })
-    text: string;
+    guildId: string;
 
     @Column({
         type: 'varchar',
     })
-    description: string;
+    channelName: string;
+
+    @Column({
+        type: 'int',
+    })
+    limit: number;
 };

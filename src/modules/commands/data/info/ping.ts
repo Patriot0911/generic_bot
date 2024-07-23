@@ -1,11 +1,10 @@
-import { SlashCommandBuilder } from "discord.js"
+import { PermissionFlagsBits, SlashCommandBuilder } from "discord.js"
 import { CommandType } from "../constants";
 
 const command: SlashCommandBuilder = new SlashCommandBuilder()
-    .setName('ping')
-    .setNameLocalizations({
-        'uk': 'test',
-    });
+    .setName('kick')
+    .setDescription('Select a member and kick them.')
+    .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers);
 
 
 export default {
