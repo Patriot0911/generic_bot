@@ -25,6 +25,33 @@ class modClient extends Client {
         return uniqNames;
     };
 
+    public getModuleContentList(moduleName: string) {
+        const keys = Array.from(this.modules.keys()).filter(
+            module => module.startsWith(`${moduleName}:`)
+        );
+        const names = keys.map(item => item.split(':')[1]);
+        return names;
+    };
+
+    public getModuleContentCollection(moduleName: string) {
+        const moduleContent = Array.from(this.modules.entries()).filter(
+            module => module[0].startsWith(`${moduleName}:`)
+        );
+        const mappedContent: [string, IModuleCallback][] = moduleContent.map(
+            item => [
+                item[0].split(':')[0],
+                item[1]
+            ]
+        );
+        const contentCollection = new Collection(mappedContent);
+        return contentCollection;
+    };
+
+    public getModuleContent(moduleName: string, contentName: string) {
+        const content = this.modules.get(moduleName.concat(':', contentName));
+        return content;
+    };
+
     public triggerEvent(eventName: ModuleExecuteEvents, ...args: any) {
         this.eventEmitter.emit(eventName, this, ...args);
     };
