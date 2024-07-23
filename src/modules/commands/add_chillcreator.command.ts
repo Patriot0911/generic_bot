@@ -5,6 +5,7 @@ import isChillCreator from './data/isChillCreator';
 import { ModuleContentTypes, } from '@/constants';
 import { chillCreators } from './data/constants';
 import modClient from '@/modClient';
+import chillServices from './data/chillServices';
 
 export default async function (interaction: ChatInputCommandInteraction, client: modClient) {
     const channel = interaction.options.getChannel('channel');
@@ -26,9 +27,16 @@ export default async function (interaction: ChatInputCommandInteraction, client:
             ephemeral: true,
             content: 'Something went wrong with command args',
         });
+    const data = await chillServices.addCreator(client, {
+        channelId: channel.id,
+        guildId: guild.id,
+        channelName,
+        limit,
+    })
     const options = {
         channelName,
         limit,
+        id: data.id,
     };
     chillCreators.set(`${guild.id}:${channel.id}`, options);
     const chillRepository = client.dataSource.getRepository(chillCreator);

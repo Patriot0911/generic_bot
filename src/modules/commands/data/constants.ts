@@ -6,3 +6,4 @@ export enum CommandType {
 };
 
 export const chillCreators = new Collection();
+export const chillTemps = new Collection<string, number>();
