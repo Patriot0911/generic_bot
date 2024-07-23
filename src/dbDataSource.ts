@@ -13,7 +13,7 @@ const AppDataSource = new DataSource({
     url: dbUrl,
     entities: [entitiesPath],
     migrations: [migrationsPath],
-    synchronize: isProd,
+    synchronize: !isProd,
     logging: false,
 });
 

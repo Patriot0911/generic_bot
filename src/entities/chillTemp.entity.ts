@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn, } from 'typeorm';
 
 @Entity()
-export default class chillCreator {
+export default class chillTemp {
     @PrimaryGeneratedColumn()
     id: number;
 
