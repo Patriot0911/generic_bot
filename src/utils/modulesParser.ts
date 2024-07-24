@@ -14,6 +14,8 @@ const modulesParser = async () => {
             if(file === moduleDataName)
                 continue;
             const filePath = path.concat('/', file);
+            if(filePath.endsWith('.js.map'))
+                continue;
             const fileContent = await import(`../${filePath}`);
             const {
                 default: callback,

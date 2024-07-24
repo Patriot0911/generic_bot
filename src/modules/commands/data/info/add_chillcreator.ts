@@ -31,6 +31,6 @@ const command = new SlashCommandBuilder()
 export default {
     command,
     extraInfo: {
-        type: CommandType.GUILD,
+        type: CommandType.GLOBAL,
     },
 };

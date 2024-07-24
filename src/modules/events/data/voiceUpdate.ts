@@ -15,11 +15,16 @@ export default async function (oldState: VoiceState, newState: VoiceState) {
             return;
         const creatorName = newState.channel.name;
         const creatorLimit = newState.channel.userLimit;
+        const perms = newState.channel.permissionOverwrites.cache.get(newState.guild.id); // improve
         const newChannel = await newState.guild.channels.create({
             name:       creatorName,
             userLimit:  creatorLimit,
             parent:     channelParent,
             type:       ChannelType.GuildVoice,
+            position:   8,
+            permissionOverwrites: perms ? [{
+                ...perms,
+            }] :[],
         });
         if(!newChannel)
             return;

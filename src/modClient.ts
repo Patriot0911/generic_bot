@@ -39,7 +39,7 @@ class modClient extends Client {
         );
         const mappedContent: [string, IModuleCallback][] = moduleContent.map(
             item => [
-                item[0].split(':')[0],
+                item[0].split('|')[0],
                 item[1]
             ]
         );
@@ -62,6 +62,7 @@ class modClient extends Client {
 
     public async build() {
         const { executeQueue, modulesList, } = await modulesParser();
+
         for(const { event, callback, } of executeQueue) {
             this.eventEmitter.on(event, callback);
         };
