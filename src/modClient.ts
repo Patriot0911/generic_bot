@@ -53,6 +53,8 @@ class modClient extends Client {
     };
 
     public triggerEvent(eventName: ModuleExecuteEvents, ...args: any) {
+        if(!Object.values(ModuleExecuteEvents).includes(eventName))
+            throw new Error(`Cannot trigger unknown event (${eventName})`);
         this.eventEmitter.emit(eventName, this, ...args);
     };
 
@@ -61,7 +63,7 @@ class modClient extends Client {
     };
 
     public async build() {
-        const { executeQueue, modulesList, } = await modulesParser();
+        const { executeQueue, modulesList, tempContent, } = await modulesParser();
 
         for(const { event, callback, } of executeQueue) {
             this.eventEmitter.on(event, callback);
@@ -70,9 +72,9 @@ class modClient extends Client {
         for(const { name, callback, } of modulesList) {
             this.modules.set(name, callback);
         };
-        this.triggerEvent(ModuleExecuteEvents.OnModulesLoad);
+        this.triggerEvent(ModuleExecuteEvents.OnModulesLoad, tempContent);
         this.connectDb();
-        this.triggerEvent(ModuleExecuteEvents.OnDbLoad);
+        this.triggerEvent(ModuleExecuteEvents.OnDbLoad, tempContent);
     };
 };
 

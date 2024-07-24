@@ -5,6 +5,7 @@ export const basicModulesPath = './modules';
 export enum ModuleContentTypes {
     Execute,
     Load,
+    TempLoad,
 };
 
 export enum ModuleExecuteEvents {

@@ -59,7 +59,7 @@ export default async function (oldState: VoiceState, newState: VoiceState) {
         const id = chillTemps.get(`${oldState.guild.id}:${oldState.channel.id}`)
         if(!id)
             return;
-        await chillServices.deleteCreator(client, id);
+        await chillServices.deleteTempChill(client, id);
         oldState.channel.delete('Chill Temp Channel');
     };
 };

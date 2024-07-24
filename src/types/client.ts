@@ -8,17 +8,22 @@ interface IModuleBaseContentInfo {
     name: string;
 };
 
-interface IModuleExecuteContentInfo extends IModuleBaseContentInfo {
+export interface IModuleTempLoadContentInfo extends IModuleBaseContentInfo {
+    type: ModuleContentTypes.TempLoad;
+    subModule?: string;
+};
+
+export interface IModuleExecuteContentInfo extends IModuleBaseContentInfo {
     type: ModuleContentTypes.Execute;
     event: ModuleExecuteEvents;
 };
 
-interface IModuleLoadContentInfo extends IModuleBaseContentInfo {
+export interface IModuleLoadContentInfo extends IModuleBaseContentInfo {
     type: ModuleContentTypes.Load;
     subModule?: string;
 };
 
-export type TModuleContentInfo = IModuleExecuteContentInfo | IModuleLoadContentInfo;
+export type TModuleContentInfo = IModuleExecuteContentInfo | IModuleLoadContentInfo | IModuleTempLoadContentInfo;
 
 export type IExecuteCallback = (client: modClient) => void;
 export type IModuleCallback = (...args: any) => void;
@@ -26,6 +31,11 @@ export type IModuleCallback = (...args: any) => void;
 export interface IExecuteQueue {
     event: ModuleExecuteEvents;
     callback: IExecuteCallback;
+};
+
+export interface ITempModules {
+    name: string;
+    callback: IModuleCallback;
 };
 
 export interface IParsedModules {
