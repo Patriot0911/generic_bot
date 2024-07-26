@@ -1,12 +1,12 @@
-import { IModClientOptions, IModuleCallback } from '@/types/client';
+import { gClient, IModClientOptions, IModuleCallback } from '@/types/client';
 import modulesParser from '@/utils/modulesParser';
 import { ModuleExecuteEvents } from '@/constants';
-import { Client, Collection, } from 'discord.js';
+import { Collection, } from 'discord.js';
 import AppDataSource from '@/dbDataSource';
 import EventEmitter from 'node:events';
 import { DataSource } from 'typeorm';
 
-class modClient extends Client {
+class modClient extends gClient.ModClient {
     protected eventEmitter: EventEmitter;
     protected modules: Collection<string, IModuleCallback>;
 

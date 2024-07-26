@@ -1,5 +1,5 @@
 import { ModuleContentTypes, ModuleExecuteEvents } from '@/constants';
-import { ClientOptions } from 'discord.js';
+import { Client, ClientOptions } from 'discord.js';
 import modClient from '@/modClient';
 
 export interface IModClientOptions extends ClientOptions { };
@@ -41,4 +41,8 @@ export interface ITempModules {
 export interface IParsedModules {
     name: string;
     callback: IModuleCallback;
+};
+
+export declare namespace gClient {
+    export class ModClient extends Client { }
 };

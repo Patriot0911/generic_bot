@@ -1,8 +1,16 @@
+import { chillCreators } from "@/modules/commands/data/constants";
 import chillCreator from "@/entities/chillCreator.entity";
 import chillTemp from "@/entities/chillTemp.entity";
 import modClient from "@/modClient";
-import { chillCreators } from "@/modules/commands/data/constants";
 import { Client } from "discord.js";
+
+declare module "gClient" {
+    namespace gClient {
+        interface ModClient {
+            test2: string;
+        }
+    }
+};
 
 export default async function (cl: Client) {
     console.log('Ready for battle!');

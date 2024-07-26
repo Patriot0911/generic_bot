@@ -25,6 +25,7 @@
         ],
         "paths": {
             "@/*": ["./src/*"],
+            "gClient": ["./src/types/client.ts"],
         }
     },
     "include": [
