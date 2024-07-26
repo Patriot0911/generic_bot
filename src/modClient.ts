@@ -68,7 +68,7 @@ class modClient extends Client {
         for(const { event, callback, } of executeQueue) {
             this.eventEmitter.on(event, callback);
         };
-        this.triggerEvent(ModuleExecuteEvents.OnPreLoad);
+        this.triggerEvent(ModuleExecuteEvents.OnPreLoad, tempContent);
         for(const { name, callback, } of modulesList) {
             this.modules.set(name, callback);
         };

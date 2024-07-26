@@ -1,8 +1,8 @@
+import { CommandType } from "@/modules/commands/data/constants";
 import { ChannelType, PermissionFlagsBits, SlashCommandBuilder, } from "discord.js"
-import { CommandType, } from "../constants";
 
 const command = new SlashCommandBuilder()
-    .setName('add_chillcreator')
+    .setName('addchillcreator')
     .setDescription('Set up chill creator')
     .addChannelOption(
         channelOption =>

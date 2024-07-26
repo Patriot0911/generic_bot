@@ -1,11 +1,11 @@
-import { ChatInputCommandInteraction, } from 'discord.js';
+import { chillServices, isChillCreator, } from './data/utils';
 import chillCreator from '@/entities/chillCreator.entity';
+import { ChatInputCommandInteraction } from 'discord.js';
+import { chillCreators } from './data/utils/constants';
 import { TModuleContentInfo } from '@/types/client';
-import isChillCreator from './data/isChillCreator';
-import { ModuleContentTypes, } from '@/constants';
-import { chillCreators } from './data/constants';
+import { addChillCreator } from './data/commands';
+import { ModuleContentTypes } from '@/constants';
 import modClient from '@/modClient';
-import chillServices from './data/chillServices';
 
 export default async function (interaction: ChatInputCommandInteraction, client: modClient) {
     const channel = interaction.options.getChannel('channel');
@@ -53,6 +53,9 @@ export default async function (interaction: ChatInputCommandInteraction, client:
 };
 
 export const contentInfo: TModuleContentInfo = {
-    name: 'add_chillcreator',
+    name: 'addchillcreator',
+    subModule: 'commands',
     type: ModuleContentTypes.Load,
 };
+
+export const commandInfo = addChillCreator;

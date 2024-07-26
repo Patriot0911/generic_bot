@@ -26,7 +26,7 @@ export interface IModuleLoadContentInfo extends IModuleBaseContentInfo {
 export type TModuleContentInfo = IModuleExecuteContentInfo | IModuleLoadContentInfo | IModuleTempLoadContentInfo;
 
 export type IExecuteCallback = (client: modClient) => void;
-export type IModuleCallback = (...args: any) => void;
+export type IModuleCallback = (...args: any) => void | any;
 
 export interface IExecuteQueue {
     event: ModuleExecuteEvents;

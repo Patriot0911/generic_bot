@@ -21,12 +21,12 @@ const modulesParser = async () => {
             event: info.event,
             callback,
         }),
-        [ModuleContentTypes.Load]: (info: IModuleLoadContentInfo, callback: IModuleCallback) => modulesList.push({
-            name: `${info.subModule ?? module}:${info.name}`,
+        [ModuleContentTypes.Load]: (info: IModuleLoadContentInfo, callback: IModuleCallback, module: string) => modulesList.push({
+            name: `${module}:${info.name}`,
             callback,
         }),
-        [ModuleContentTypes.TempLoad]: (info: IModuleTempLoadContentInfo, callback: IModuleCallback) => tempContent.push({
-            name: `${info.subModule ?? module}:${info.name}`,
+        [ModuleContentTypes.TempLoad]: (info: IModuleTempLoadContentInfo, callback: IModuleCallback, module: string) => tempContent.push({
+            name: `${module}:${info.name}`,
             callback,
         }),
     };
@@ -52,7 +52,7 @@ const modulesParser = async () => {
             const action = contentActions[type];
             if(!action)
                 continue;
-            action(contentInfo, callback);
+            action(contentInfo, callback, contentInfo.subModule ?? module);
         };
     };
     return {
