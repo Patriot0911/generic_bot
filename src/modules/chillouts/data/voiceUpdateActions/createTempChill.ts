@@ -7,10 +7,8 @@ export default async function (client: modClient, channel: VoiceBasedChannel, gu
     if(!channel || !guild || !isChillCreator(guild.id, channel.id))
         return;
 
-    if(!client.guilds.cache.get(guild.id)) {
-        // delete creator from db;
-        return;
-    };
+    if(!client.guilds.cache.get(guild.id))
+        return chillServices.deleteCreator(client, guild.id, channel.id);
 
     const channelParent = channel.parent;
     const guildId = guild.id;
@@ -32,29 +30,23 @@ export default async function (client: modClient, channel: VoiceBasedChannel, gu
             ...perms,
         }] :[],
     });
-    const dataCreator = await chillServices.addCreator(client, {
+    if(!newChannel)
+        return;
+    await chillServices.deleteCreator(client, channel.guild.id, channel.id);
+    await chillServices.addCreator(client, {
         channelName: chillOptions.channelName,
         limit: chillOptions.limit,
         channelId: newChannel.id,
         guildId: guildId,
     });
-    chillCreators.set(`${guildId}:${newChannel.id}`, {
-        ...chillOptions,
-        id: dataCreator.id,
-    });
-    if(!newChannel)
-        return;
     await channel.setName(chillOptions.channelName);
     await channel.setUserLimit(chillOptions.limit);
-    const dataChill = await chillServices.addTempChill(client, {
+    await chillServices.addTemp(client, {
         channelId: channel.id,
-        guildId: guildId,
+        guildId: guild.id,
     });
-    chillCreators.delete(`${guildId}:${channel.id}`);
-    chillTemps.set(`${guildId}:${channel.id}`, dataChill.id);
-    chillServices.deleteCreator(client, chillOptions.id);
-    if(channel.members.size < 1 && channel) {
+    if(channel && channel.members.size < 1) {
+        await chillServices.deleteTemp(client, channel.guild.id, channel.id);
         channel.delete('Empty temp voice');
-        // delete temp channel*
     };
 };

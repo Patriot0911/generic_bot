@@ -1,5 +1,5 @@
 import { ModuleContentTypes, ModuleExecuteEvents } from '@/constants';
-import { ClientOptions } from 'discord.js';
+import { ClientOptions, } from 'discord.js';
 import modClient from '@/modClient';
 
 export interface IModClientOptions extends ClientOptions { };
@@ -10,7 +10,7 @@ interface IModuleBaseContentInfo {
 
 export interface IModuleTempLoadContentInfo extends IModuleBaseContentInfo {
     type: ModuleContentTypes.TempLoad;
-    subModule?: string;
+    subModule: string;
 };
 
 export interface IModuleExecuteContentInfo extends IModuleBaseContentInfo {
@@ -20,10 +20,14 @@ export interface IModuleExecuteContentInfo extends IModuleBaseContentInfo {
 
 export interface IModuleLoadContentInfo extends IModuleBaseContentInfo {
     type: ModuleContentTypes.Load;
-    subModule?: string;
+    subModule: string;
 };
 
-export type TModuleContentInfo = IModuleExecuteContentInfo | IModuleLoadContentInfo | IModuleTempLoadContentInfo;
+export type TModuleContentInfo = (
+    IModuleExecuteContentInfo |
+    IModuleLoadContentInfo |
+    IModuleTempLoadContentInfo
+);
 
 export type IExecuteCallback = (client: modClient) => void;
 export type IModuleCallback = (...args: any) => void | any;

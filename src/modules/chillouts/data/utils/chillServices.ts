@@ -1,40 +1,76 @@
 import chillCreator from '@/entities/chillCreator.entity';
 import chillTemp from '@/entities/chillTemp.entity';
 import modClient from '@/modClient';
+import { chillCreators, chillTemps } from './constants';
 
 const chillServices = {
-    changeCreator: async (client: modClient, oldChillId: number, chillOptions: Omit<chillCreator, 'id'>) => {
-        const chillRepository = client.dataSource.getRepository(chillCreator);
-        await chillRepository.delete({
-            id: oldChillId,
-        });
-        return chillRepository.save({
-            ...chillOptions,
-        });
-    },
-    addCreator: async (client: modClient, chillOptions: Omit<chillCreator, 'id'>) => {
-        const chillRepository = client.dataSource.getRepository(chillCreator);
-        return chillRepository.save({
-            ...chillOptions,
+    deleteCreator: (client: modClient, guildId: string, channelId: string) => {
+        const creatorRepository = client.dataSource.getRepository(chillCreator);
+        const key = `${guildId}:${channelId}`;
+        const chillLocal = chillCreators.get(key);
+        if(chillLocal)
+            chillCreators.delete(key);
+        return creatorRepository.delete({
+            channelId, // check delete not exists
+            guildId,
         });
     },
-    deleteCreator: async (client: modClient, chillId: number) => {
-        const chillRepository = client.dataSource.getRepository(chillCreator);
-        return chillRepository.delete({
-            id: chillId,
+    addCreator: (client: modClient, options: Omit<chillCreator, 'id'>) => {
+        const creatorRepository = client.dataSource.getRepository(chillCreator);
+        const tempRepository = client.dataSource.getRepository(chillTemp);
+        const key = `${options.guildId}:${options.channelId}`;
+        const chillTempLocal = chillTemps.get(key);
+        if(chillTempLocal) {
+            chillTemps.delete(key);
+            tempRepository.delete({
+                channelId: options.channelId,
+                guildId: options.guildId,
+            });
+        };
+        const chillCreatorLocal = chillCreators.get(key);
+        if(!chillCreatorLocal)
+            chillCreators.set(key, options);
+        return creatorRepository.upsert({
+                ...options,
+            },
+            {
+                conflictPaths: ['channelId', 'guildId'],
+            },
+        );
+    },
+    deleteTemp: (client: modClient, guildId: string, channelId: string) => {
+        const tempRepository = client.dataSource.getRepository(chillTemp);
+        const key = `${guildId}:${channelId}`;
+        const chillTempLocal = chillTemps.get(key);
+        if(chillTempLocal)
+            chillTemps.delete(key);
+        return tempRepository.delete({
+            channelId,
+            guildId,
         });
     },
-    addTempChill: async (client: modClient, chillOptions: Omit<chillTemp, 'id'>) => {
-        const chillTempRepository = client.dataSource.getRepository(chillTemp);
-        return chillTempRepository.save({
-            ...chillOptions,
-        });
-    },
-    deleteTempChill: async (client: modClient, chillId: number) => {
-        const chillTempRepository = client.dataSource.getRepository(chillTemp);
-        return chillTempRepository.delete({
-            id: chillId,
-        });
+    addTemp: (client: modClient, options: Omit<chillTemp, 'id'>) => {
+        const tempRepository = client.dataSource.getRepository(chillTemp);
+        const creatorRepository = client.dataSource.getRepository(chillCreator);
+        const key = `${options.guildId}:${options.channelId}`;
+        const chillTempLocal = chillTemps.get(key);
+        if(!chillTempLocal)
+            chillTemps.set(key, key);
+        const chillCreatorLocal = chillCreators.get(key);
+        if(chillCreatorLocal) {
+            chillCreators.delete(key);
+            creatorRepository.delete({
+                channelId: options.channelId, // check delete not exists
+                guildId: options.guildId,
+            });
+        };
+        return tempRepository.upsert({
+                ...options,
+            },
+            {
+                conflictPaths: ['channelId', 'guildId'],
+            },
+        );
     },
 };
 

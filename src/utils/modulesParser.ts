@@ -11,6 +11,7 @@ import {
 } from '@/types/client';
 import { pathToFileURL } from 'node:url';
 import { glob } from 'glob';
+import _path from 'node:path';
 
 const modulesParser = async () => {
     const modulesList: IParsedModules[] = [],
@@ -49,7 +50,7 @@ const modulesParser = async () => {
         const action = contentActions[type];
         if(!action)
             continue;
-        action(contentInfo, callback, contentInfo.subModule ?? module);
+        action(contentInfo, callback, contentInfo.subModule);
     };
     return {
         modulesList,
