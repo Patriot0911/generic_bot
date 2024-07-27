@@ -1,6 +1,6 @@
 import { GatewayIntentBits } from 'discord.js';
 
-export const basicModulesPath = './modules';
+export const modulesPath = 'modules';
 
 export enum ModuleContentTypes {
     Execute,

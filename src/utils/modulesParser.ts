@@ -1,4 +1,4 @@
-import { basicModulesPath, ModuleContentTypes, } from '@/constants';
+import { modulesPath, ModuleContentTypes, moduleDataName, } from '@/constants';
 import {
     IExecuteCallback,
     IExecuteQueue,
@@ -9,8 +9,8 @@ import {
     IParsedModules,
     ITempModules,
 } from '@/types/client';
-import { isValidModuleFile, } from '@/validators';
-import fs from 'node:fs/promises';
+import { pathToFileURL } from 'node:url';
+import { glob } from 'glob';
 
 const modulesParser = async () => {
     const modulesList: IParsedModules[] = [],
@@ -30,30 +30,26 @@ const modulesParser = async () => {
             callback,
         }),
     };
-    const rootPath =  __dirname.concat('/..');
-    const moduleFilesList = await fs.readdir(`${rootPath}/${basicModulesPath}`);
+    const beginPath = `src/${modulesPath}`;
+    const moduleFilesList = await glob(`${beginPath}/**/*.{js,ts}`, {
+        ignore: `${beginPath}/**/${moduleDataName}/**`,
+    });
     for(const module of moduleFilesList) {
-        const path = basicModulesPath.concat('/', module);
-        const filesList = await fs.readdir(`${rootPath}/${path}`);
-        for(const file of filesList) {
-            if(!isValidModuleFile(file))
-                continue;
-            const filePath = path.concat('/', file);
-            const fileContent = await import(`../${filePath}`);
-            const {
-                default: callback,
-                contentInfo,
-            } = fileContent;
-            if(!contentInfo || !callback)
-                throw new Error(
-                    `Module's content is invalid (Module: ${module} | Content: ${file})`
-                );
-            const type = <ModuleContentTypes> contentInfo.type;
-            const action = contentActions[type];
-            if(!action)
-                continue;
-            action(contentInfo, callback, contentInfo.subModule ?? module);
-        };
+        const path = pathToFileURL(module);
+        const fileContent = await import(path.toString());
+        const {
+            default: callback,
+            contentInfo,
+        } = fileContent;
+        if(!contentInfo || !callback)
+            throw new Error(
+                `Module's content is invalid (Module: ${module})`
+            );
+        const type = <ModuleContentTypes> contentInfo.type;
+        const action = contentActions[type];
+        if(!action)
+            continue;
+        action(contentInfo, callback, contentInfo.subModule ?? module);
     };
     return {
         modulesList,
