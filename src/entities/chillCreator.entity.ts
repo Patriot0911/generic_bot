@@ -3,8 +3,8 @@ import { Column, Entity, PrimaryGeneratedColumn, Unique, } from 'typeorm';
 @Entity()
 @Unique('uniqCreatorGuildChannel', ['channelId', 'guildId'])
 export default class chillCreator {
-    @PrimaryGeneratedColumn()
-    id: number;
+    @PrimaryGeneratedColumn('uuid')
+    id: string;
 
     @Column({
         type: 'varchar',

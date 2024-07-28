@@ -11,7 +11,7 @@ const chillServices = {
         if(chillLocal)
             chillCreators.delete(key);
         return creatorRepository.delete({
-            channelId, // check delete not exists
+            channelId,
             guildId,
         });
     },
@@ -60,7 +60,7 @@ const chillServices = {
         if(chillCreatorLocal) {
             chillCreators.delete(key);
             creatorRepository.delete({
-                channelId: options.channelId, // check delete not exists
+                channelId: options.channelId,
                 guildId: options.guildId,
             });
         };
