@@ -11,19 +11,19 @@ const command = new SlashCommandBuilder()
             .addChannelTypes(ChannelType.GuildVoice)
             .setRequired(true)
     )
+    .addStringOption(
+        stringOption =>
+            stringOption.setName('name')
+            .setDescription('Set name for new channels')
+            .setRequired(true)
+    )
     .addNumberOption(
         numberOption =>
             numberOption.setName('limit')
             .setDescription('Set channel limits')
             .setMinValue(0)
             .setMaxValue(99)
-            .setRequired(true)
-    )
-    .addStringOption(
-        stringOption =>
-            stringOption.setName('name')
-            .setDescription('Set name for new channels')
-            .setRequired(true)
+            .setRequired(false)
     )
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels);
 
