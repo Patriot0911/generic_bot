@@ -31,8 +31,9 @@ const modulesParser = async () => {
             callback,
         }),
     };
-    const rootDir = __dirname.slice(0, __dirname.lastIndexOf('\\'));
-    const beginPath = `${rootDir}\\${modulesPath}`;
+    const lastIndex = __dirname.lastIndexOf('\\') === -1 ? __dirname.lastIndexOf('/') : __dirname.lastIndexOf('\\');
+    const rootDir = __dirname.slice(0, lastIndex);
+    const beginPath = `${rootDir}/${modulesPath}`;
     const moduleFilesList = await glob(`${beginPath}/**/*.{js,ts}`, {
         ignore: [
             `src/**/${moduleDataName}/**`,
@@ -43,7 +44,7 @@ const modulesParser = async () => {
     for(const module of moduleFilesList) {
         const path = pathToFileURL(module);
         const fileContent = await import(
-            rootDir.endsWith('\\dist') ? module : path.toString()
+            (rootDir.endsWith('/dist') || rootDir.endsWith('\\dist')) ? module : path.toString()
         );
         const {
             default: callback,
