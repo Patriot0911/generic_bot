@@ -31,13 +31,20 @@ const modulesParser = async () => {
             callback,
         }),
     };
-    const beginPath = `src/${modulesPath}`;
+    const rootDir = __dirname.slice(0, __dirname.lastIndexOf('\\'));
+    const beginPath = `${rootDir}\\${modulesPath}`;
     const moduleFilesList = await glob(`${beginPath}/**/*.{js,ts}`, {
-        ignore: `${beginPath}/**/${moduleDataName}/**`,
+        ignore: [
+            `src/**/${moduleDataName}/**`,
+            `dist/**/${moduleDataName}/**`,
+        ],
+        absolute: true,
     });
     for(const module of moduleFilesList) {
         const path = pathToFileURL(module);
-        const fileContent = await import(path.toString());
+        const fileContent = await import(
+            rootDir.endsWith('\\dist') ? module : path.toString()
+        );
         const {
             default: callback,
             contentInfo,
