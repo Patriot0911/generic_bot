@@ -1,48 +1,69 @@
-import { basicModulesPath, ModuleContentTypes, moduleDataName } from '@/constants';
-import { IExecuteQueue, IParsedModules, TModuleContentInfo } from '@/types/client';
-import fs from 'node:fs/promises';
+import { modulesPath, ModuleContentTypes, moduleDataName, } from '@/constants';
+import {
+    IExecuteCallback,
+    IExecuteQueue,
+    IModuleCallback,
+    IModuleExecuteContentInfo,
+    IModuleLoadContentInfo,
+    IModuleTempLoadContentInfo,
+    IParsedModules,
+    ITempModules,
+} from '@/types/client';
+import { pathToFileURL } from 'node:url';
+import { glob } from 'glob';
+import _path from 'node:path';
 
 const modulesParser = async () => {
     const modulesList: IParsedModules[] = [],
-        executeQueue: IExecuteQueue[] = [];
-    const rootPath =  __dirname.concat('/..');
-    const moduleFilesList = await fs.readdir(`${rootPath}/${basicModulesPath}`);
+        executeQueue: IExecuteQueue[] = [],
+        tempContent: ITempModules[] = [];
+    const contentActions = {
+        [ModuleContentTypes.Execute]: (info: IModuleExecuteContentInfo, callback: IExecuteCallback) => executeQueue.push({
+            event: info.event,
+            callback,
+        }),
+        [ModuleContentTypes.Load]: (info: IModuleLoadContentInfo, callback: IModuleCallback, module: string) => modulesList.push({
+            name: `${module}:${info.name}`,
+            callback,
+        }),
+        [ModuleContentTypes.TempLoad]: (info: IModuleTempLoadContentInfo, callback: IModuleCallback, module: string) => tempContent.push({
+            name: `${module}:${info.name}`,
+            callback,
+        }),
+    };
+    const lastIndex = __dirname.lastIndexOf('\\') === -1 ? __dirname.lastIndexOf('/') : __dirname.lastIndexOf('\\');
+    const rootDir = __dirname.slice(0, lastIndex);
+    const beginPath = `${rootDir}/${modulesPath}`;
+    const moduleFilesList = await glob(`${beginPath}/**/*.{js,ts}`, {
+        ignore: [
+            `src/**/${moduleDataName}/**`,
+            `dist/**/${moduleDataName}/**`,
+        ],
+        absolute: true,
+    });
     for(const module of moduleFilesList) {
-        const path = basicModulesPath.concat('/', module);
-        const filesList = await fs.readdir(`${rootPath}/${path}`);
-        for(const file of filesList) {
-            if(file === moduleDataName)
-                continue;
-            const filePath = path.concat('/', file);
-            const fileContent = await import(`../${filePath}`);
-            const {
-                default: callback,
-                contentInfo,
-            } = fileContent;
-            if(!contentInfo || !callback)
-                throw new Error(
-                    `Module's content is invalid (Module: ${module} | Content: ${file})`
-                );
-            const info = <TModuleContentInfo> contentInfo;
-            // validate Info
-            if(info.type === ModuleContentTypes.Execute) {
-                executeQueue.push({
-                    event: info.event,
-                    callback,
-                });
-            } else if(info.type === ModuleContentTypes.Load) {
-                const contentModuleName = info.subModule ?? module;
-                const contentName = `${contentModuleName}:${info.name}`;
-                modulesList.push({
-                    name: contentName,
-                    callback,
-                });
-            };
-        };
+        const path = pathToFileURL(module);
+        const fileContent = await import(
+            (rootDir.endsWith('/dist') || rootDir.endsWith('\\dist')) ? module : path.toString()
+        );
+        const {
+            default: callback,
+            contentInfo,
+        } = fileContent;
+        if(!contentInfo || !callback)
+            throw new Error(
+                `Module's content is invalid (Module: ${module})`
+            );
+        const type = <ModuleContentTypes> contentInfo.type;
+        const action = contentActions[type];
+        if(!action)
+            continue;
+        action(contentInfo, callback, contentInfo.subModule);
     };
     return {
         modulesList,
         executeQueue,
+        tempContent,
     };
 };
 
