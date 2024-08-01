@@ -16,6 +16,6 @@ export default async function (client: modClient, channel: VoiceBasedChannel, gu
     const id = chillTemps.get(chillId)
     if(!id)
         return;
-    await chillServices.deleteTemp(client, guild.id, channel.id);
+    chillServices.deleteTemp(client, guild.id, channel.id);
     channel.delete('Chill Temp Channel');
 };

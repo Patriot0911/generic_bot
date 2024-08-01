@@ -1,12 +1,11 @@
-import { createTempChill, deleteTempChill } from "../voiceUpdateActions";
-import { isChillCreator, isTempChill } from "../utils";
+import { deleteTempVoice, createTempVoice, } from "@/modules/voiceCreator/data";
+import { isTempVoice, isVoiceCreator, } from "../utils";
 import { VoiceState, } from "discord.js";
 import modClient from "@/modClient";
 
 export default async function (oldState: VoiceState, newState: VoiceState) {
     if(
-        (!oldState.channel && !newState.channel)
-        ||
+        (!oldState.channel && !newState.channel) ||
         (oldState.channel && newState.channel && oldState.channelId === newState.channelId)
     )
         return;
@@ -15,24 +14,27 @@ export default async function (oldState: VoiceState, newState: VoiceState) {
     if(
         newState &&
         newState.channel &&
-        isChillCreator(newState.guild.id, newState.channel.id)
+        isVoiceCreator(newState.guild.id, newState.channel.id)
     ) {
         const {
             guild,
             channel,
+            member,
         } = newState;
-        createTempChill(client, channel, guild);
+        if(!member)
+            return;
+        createTempVoice(client, channel, guild, member);
     };
     if(
         oldState &&
         oldState.channel &&
-        !isChillCreator(oldState.guild.id, oldState.channel.id) &&
-        isTempChill(oldState.guild.id, oldState.channel.id)
+        !isVoiceCreator(oldState.guild.id, oldState.channel.id) &&
+        isTempVoice(oldState.guild.id, oldState.channel.id)
     ) {
         const {
             guild,
             channel,
         } = oldState;
-        deleteTempChill(client, channel, guild);
+        deleteTempVoice(client, channel, guild)
     };
 };

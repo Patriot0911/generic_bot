@@ -2,7 +2,7 @@ import { Column, Entity, PrimaryGeneratedColumn, Unique, } from 'typeorm';
 
 @Entity()
 @Unique('uniqTempGuildChannel', ['channelId', 'guildId'])
-export default class chillTemp {
+export default class voiceTemp {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
@@ -15,4 +15,9 @@ export default class chillTemp {
         type: 'varchar',
     })
     guildId: string;
+
+    @Column({
+        type: 'varchar',
+    })
+    lastOwnerId: string;
 };

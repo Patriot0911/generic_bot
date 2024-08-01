@@ -1,5 +1,6 @@
 import { DMChannel, NonThreadGuildBasedChannel, } from 'discord.js';
-import { isChillCreator, chillServices, isTempChill, } from '../utils';
+import { isTempVoice, voiceServices } from '@/modules/voiceCreator/data';
+import { isVoiceCreator, } from '../utils';
 import modClient from '@/modClient';
 
 export default async function (channel: (DMChannel | NonThreadGuildBasedChannel)) {
@@ -8,8 +9,8 @@ export default async function (channel: (DMChannel | NonThreadGuildBasedChannel)
     const guildId = channel.guildId;
     const channelId = channel.id;
     const client = <modClient> channel.client;
-    if(isChillCreator(guildId, channelId))
-        return chillServices.deleteCreator(client, guildId, channelId);
-    if(isTempChill(guildId, channelId))
-        return chillServices.deleteTemp(client, guildId, channelId);
+    if(isVoiceCreator(guildId, channelId))
+        return voiceServices.deleteCreator(client, guildId, channelId);
+    if(isTempVoice(guildId, channelId))
+        return voiceServices.deleteTemp(client, guildId, channelId);
 };

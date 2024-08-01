@@ -1,6 +1,6 @@
 import { ChannelType, Guild, VoiceBasedChannel, } from "discord.js";
-import { chillCreators, chillTemps } from "../utils/constants";
 import { chillServices, isChillCreator } from "../utils";
+import { chillCreators, } from "../utils/constants";
 import modClient from "@/modClient";
 
 export default async function (client: modClient, channel: VoiceBasedChannel, guild: Guild) {

@@ -1,5 +1,5 @@
-import chillCreator from '@/entities/chillCreator.entity';
-import chillTemp from '@/entities/chillTemp.entity';
+import chillCreator from '@/entities/chillCreator/chillCreator.entity';
+import chillTemp from '@/entities/chillCreator/chillTemp.entity';
 import { Client, ChannelType, } from 'discord.js';
 import modClient from '@/modClient';
 import { chillCreators } from '../utils/constants';

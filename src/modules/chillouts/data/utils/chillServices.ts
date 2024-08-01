@@ -1,7 +1,6 @@
-import chillCreator from '@/entities/chillCreator.entity';
-import chillTemp from '@/entities/chillTemp.entity';
+import { chillTemp, chillCreator, } from '@/entities/chillCreator';
+import { chillCreators, chillTemps, } from './constants';
 import modClient from '@/modClient';
-import { chillCreators, chillTemps } from './constants';
 
 const chillServices = {
     deleteCreator: (client: modClient, guildId: string, channelId: string) => {
