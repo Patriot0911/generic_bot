@@ -46,7 +46,7 @@ export default async function (client: modClient, channel: VoiceBasedChannel, gu
     await voiceServices.addTemp(client, {
         channelId: channelId,
         guildId: guildId,
-        ownerId: '',
+        ownerId: member.user.id,
     });
     if(!newChannel)
         return voiceServices.deleteTemp(client, guildId, channelId);

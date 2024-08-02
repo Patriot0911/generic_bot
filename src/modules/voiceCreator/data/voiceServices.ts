@@ -40,33 +40,55 @@ const voiceServices = {
     addTemp: (client: modClient, options: IVoiceTempOptions) => {
         const tempRepository = client.dataSource.getRepository(voiceTemp);
         const creatorRepository = client.dataSource.getRepository(voiceCreator);
-        const key = `${options.guildId}:${options.channelId}`;
+        const { channelId, guildId, ownerId, } = options;
+        const key = `${guildId}:${channelId}`;
         const voiceTempLocal = voiceTemps.get(key);
         if(!voiceTempLocal)
-            voiceTemps.set(key, options);
+            voiceTemps.set(key, {
+                ownerId: ownerId,
+            });
         const voiceCreatorLocal = voiceCreators.get(key);
         if(voiceCreatorLocal) {
             voiceCreators.delete(key);
             creatorRepository.delete({
-                channelId: options.channelId,
-                guildId: options.guildId,
+                channelId,
+                guildId,
             });
         };
         return tempRepository.upsert({
                 lastOwnerId: options.ownerId,
-                channelId: options.channelId,
-                guildId: options.guildId,
+                channelId,
+                guildId,
             },
             {
                 conflictPaths: ['channelId', 'guildId'],
             },
         );
     },
+    changeTempOwner: (client: modClient, guildId: string, channelId: string, ownerId: string) => {
+        const tempRepository = client.dataSource.getRepository(voiceTemp);
+        const key = `${guildId}:${channelId}`;
+        const voiceTempLocal = voiceTemps.get(key);
+        if(!voiceTempLocal)
+            return;
+        voiceTemps.set(key, {
+            ownerId,
+        });
+        return tempRepository.upsert({
+                channelId,
+                guildId,
+                lastOwnerId: ownerId,
+            },
+            {
+                conflictPaths: ['channelId', 'guildId'],
+            }
+        );
+    },
     deleteTemp: (client: modClient, guildId: string, channelId: string) => {
         const tempRepository = client.dataSource.getRepository(voiceTemp);
         const key = `${guildId}:${channelId}`;
-        const chillTempLocal = voiceTemps.get(key);
-        if(chillTempLocal)
+        const voiceTempLocal = voiceTemps.get(key);
+        if(voiceTempLocal)
             voiceTemps.delete(key);
         return tempRepository.delete({
             channelId,

@@ -1,12 +1,17 @@
-import { deleteTempVoice, createTempVoice, } from "@/modules/voiceCreator/data";
+import { deleteTempVoice, createTempVoice, changeTempOwner, } from "@/modules/voiceCreator/data";
 import { isTempVoice, isVoiceCreator, } from "../utils";
 import { VoiceState, } from "discord.js";
 import modClient from "@/modClient";
+import { voiceTemps } from "@/modules/voiceCreator/data/constants";
 
 export default async function (oldState: VoiceState, newState: VoiceState) {
     if(
         (!oldState.channel && !newState.channel) ||
-        (oldState.channel && newState.channel && oldState.channelId === newState.channelId)
+        (oldState.channel && newState.channel && oldState.channelId === newState.channelId) ||
+        (
+            oldState.channel && newState.channel &&
+            newState.channelId === oldState.channelId
+        )
     )
         return;
     const client = <modClient> oldState.client;
@@ -35,6 +40,11 @@ export default async function (oldState: VoiceState, newState: VoiceState) {
             guild,
             channel,
         } = oldState;
-        deleteTempVoice(client, channel, guild)
+        if(channel.members.size < 1)
+            return deleteTempVoice(client, channel, guild);
+        const user = oldState.member?.user;
+        if(!user)
+            return;
+        changeTempOwner(client, channel, guild, user);
     };
 };
