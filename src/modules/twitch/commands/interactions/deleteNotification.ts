@@ -1,32 +1,34 @@
-import { ChatInputCommandInteraction } from 'discord.js';
+import deleteNotification from '../data/deleteNotification';
+import { ChatInputCommandInteraction, } from 'discord.js';
 import { TModuleContentInfo } from '@/types/client';
 import { TwitchService } from '../../data/services';
 import { ModuleContentTypes } from '@/constants';
-import { listNotifications, } from '../data';
 import modClient from '@/modClient';
 
 export default async function (interaction: ChatInputCommandInteraction, client: modClient) {
+    const subId = interaction.options.getString('name');
+    if(!subId)
+        return;
     const {
         data,
-        message,
-    } = await TwitchService.getSubscriptionList();
-    console.log(data);
-    // console.log(data.data[data.data.length-1]);
-    if(message)
+        message: userMessage,
+    } = await TwitchService.deleteSubscription(subId);
+    if(userMessage)
         return interaction.reply({
             ephemeral: true,
-            content: message,
+            content: userMessage,
         });
-    interaction.reply({
+    console.log(data);
+    return interaction.reply({
         ephemeral: true,
-        content: 'Success',
-    });
+        content: `Success`,
+    })
 };
 
 export const contentInfo: TModuleContentInfo = {
-    name: 'list_notifications',
+    name: 'delete_notification',
     subModule: 'commands',
     type: ModuleContentTypes.Load,
 };
 
-export const commandInfo = listNotifications;
+export const commandInfo = deleteNotification;

@@ -1,9 +1,10 @@
 import { ChatInputCommandInteraction, } from 'discord.js';
-import { addNotification, } from '../../data/commands';
+import { addNotification, } from '../data';
 import { TModuleContentInfo } from '@/types/client';
 import { TwitchService } from '../../data/services';
 import { ModuleContentTypes } from '@/constants';
 import modClient from '@/modClient';
+import subscription from '@/entities/twitch/subscription.entity';
 
 export default async function (interaction: ChatInputCommandInteraction, client: modClient) {
     const streamerName = interaction.options.getString('name');
@@ -18,16 +19,29 @@ export default async function (interaction: ChatInputCommandInteraction, client:
             ephemeral: true,
             content: userMessage,
         });
+
     console.log(userData);
 
+    // check & create new guild if it is nes-ry.
+
     const { data, message, } = await TwitchService.callAddStreamer(userData.id);
+    console.log({
+        data: data.data,
+    });
     if(message)
         return interaction.reply({
             ephemeral: true,
             content: message,
         });
 
-    console.log(data);
+    const subscriptionRepository = client.dataSource.getRepository(subscription);
+
+    const subData = subscriptionRepository.create({
+        broadcaster_id: userData.id,
+        subscriptionId: data.data[0].id, // add guild
+    });
+    const res = await subscriptionRepository.save(subData);
+    console.log(res);
     return interaction.reply({
         ephemeral: true,
         content: `Success`,

@@ -75,10 +75,27 @@ class TwitchService {
         };
         try {
             const { data: resData, } = await axios.post(
-                'https://api.twitch.tv/helix/eventsub/subscriptions', data, { headers, }
+                `${this.baseApiUrl}/eventsub/subscriptions`, data, { headers, }
             );
             return {
                 data: resData,
+            };
+        } catch(e) {
+            const { message, } = <AxiosError> e;
+            return {
+                message,
+            };
+        };
+    };
+
+    static async deleteSubscription(id: string) {
+        const headers = this.getHeaders();
+        try {
+            const { data, } = await axios.delete(
+                `${this.baseApiUrl}/eventsub/subscriptions?id=${id}`, { headers, }
+            );
+            return {
+                data,
             };
         } catch(e) {
             const { message, } = <AxiosError> e;
