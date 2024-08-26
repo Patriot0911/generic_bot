@@ -1,6 +1,7 @@
-import { commandInfo as deleteNotifications} from './commands/interactions/deleteNotification';
-import { commandInfo as listNotifications} from './commands/interactions/listNotifications';
-import { commandInfo as addNotification } from './commands/interactions/addNotification';
+import { commandInfo as deleteNotifications} from './interactions/deleteNotification';
+import { commandInfo as listNotifications} from './interactions/listNotifications';
+import { commandInfo as addNotification } from './interactions/addNotification';
+import { commandInfo as addGuild } from './interactions/addGuild';
 import { TModuleContentInfo } from '@/types/client';
 import { ModuleContentTypes, } from '@/constants';
 import modClient from '@/modClient';
@@ -10,6 +11,7 @@ export default function (_: modClient) {
         addNotification,
         listNotifications,
         deleteNotifications,
+        addGuild,
     ];
 };
 

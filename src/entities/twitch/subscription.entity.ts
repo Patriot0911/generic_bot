@@ -19,6 +19,11 @@ export default class subscription {
     })
     subscriptionId: string;
 
+    @Column({
+        type: 'varchar',
+    })
+    streamerName: string;
+
     @ManyToMany(() => twitchGuild)
     @JoinTable()
     guilds: twitchGuild[];

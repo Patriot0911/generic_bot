@@ -1,9 +1,11 @@
 import axios, { AxiosError, } from "axios";
-import { callbackUrl } from "../constants";
 
 // add validation for token
 class TwitchService {
+    static staticBaseUrl = 'https://static-cdn.jtvnw.net';
     static baseApiUrl = 'https://api.twitch.tv/helix';
+
+    static callbackUrl = process.env.TWITCH_WEBHOOK_CALLBACK;
     static clientId = process.env.TWITCH_CLIENT_ID;
     static token = process.env.TWITCH_TOKEN;
 
@@ -69,7 +71,7 @@ class TwitchService {
             },
             transport: {
                 method: "webhook",
-                callback: callbackUrl,
+                callback: this.callbackUrl,
                 secret: process.env.TWITCH_SECRET,
             },
         };
@@ -78,7 +80,10 @@ class TwitchService {
                 `${this.baseApiUrl}/eventsub/subscriptions`, data, { headers, }
             );
             return {
-                data: resData,
+                data: {
+                    user: resData.data[0],
+                    res: resData,
+                },
             };
         } catch(e) {
             const { message, } = <AxiosError> e;
@@ -103,6 +108,15 @@ class TwitchService {
                 message,
             };
         };
+    };
+
+    static getStreamUrl(streamerName: string) {
+        return `https://www.twitch.tv/${streamerName}`;
+    };
+
+    static getStreamPreview(streamerName: string, size = { x: 400, y: 225, }) {
+        const sizesStr = `${size.x}x${size.y}`;
+        return `${this.staticBaseUrl}/previews-ttv/live_user_${streamerName}-${sizesStr}.jpg`;
     };
 };
 

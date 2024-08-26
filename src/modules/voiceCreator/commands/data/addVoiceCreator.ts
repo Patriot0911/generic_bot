@@ -7,7 +7,7 @@ const command = new SlashCommandBuilder()
     .addChannelOption(
         channelOption =>
             channelOption.setName('channel')
-            .setDescription('Select channel to set up a chill creator')
+            .setDescription('Select channel to set up a voice creator')
             .addChannelTypes(ChannelType.GuildVoice)
             .setRequired(true)
     )
@@ -28,7 +28,7 @@ const command = new SlashCommandBuilder()
     .addChannelOption(
         catOption =>
             catOption.setName('category')
-            .setDescription('Set channel limits')
+            .setDescription('Set channel category')
             .addChannelTypes(ChannelType.GuildCategory)
             .setRequired(false)
     )

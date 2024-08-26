@@ -1,9 +1,9 @@
-import { chillServices, isChillCreator, } from '../../data/utils';
 import { ChannelType, ChatInputCommandInteraction } from 'discord.js';
+import { chillServices, isChillCreator, } from '../../data/utils';
 import { createTempChill } from '../../data/voiceUpdateActions';
 import { TModuleContentInfo } from '@/types/client';
-import { addChillCreator } from '../../data/commands';
 import { ModuleContentTypes } from '@/constants';
+import { addChillCreator } from '../data';
 import modClient from '@/modClient';
 
 export default async function (interaction: ChatInputCommandInteraction, client: modClient) {

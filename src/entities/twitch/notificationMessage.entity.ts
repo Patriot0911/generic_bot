@@ -15,6 +15,13 @@ export default class notificationMessage {
 
     @Column({
         type: 'json',
+        nullable: true,
     })
     json: JSON;
+
+    @Column({
+        type: 'varchar',
+        nullable: true,
+    })
+    channelId?: string;
 };

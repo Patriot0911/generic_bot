@@ -1,12 +1,13 @@
 import { ModuleContentTypes, ModuleExecuteEvents, } from '@/constants';
 import { ITempModules, TModuleContentInfo } from '@/types/client';
 import commandLoader from './data/commandsLoader';
-import { SlashCommandBuilder } from 'discord.js';
+import { Collection, SlashCommandBuilder } from 'discord.js';
 import { CommandType, } from './data/constants';
 import modClient from '@/modClient';
 
 export default async function (_: modClient, tempModules: ITempModules[]) {
     const globalCommands: SlashCommandBuilder[] = [];
+    const guildCommands = new Collection<string, any[]>();
     const addCommand = async (command: any) => {
         const {
             command: commandStruct,
@@ -19,11 +20,11 @@ export default async function (_: modClient, tempModules: ITempModules[]) {
             globalCommands.push(commandToPut);
             return;
         };
-        const loader = commandLoader[<CommandType> extraInfo.type];
-        if(!loader)
-            throw new Error('Command loader not found');
         const guild = extraInfo.guild;
-        await loader([commandToPut], guild); // rework
+        const prevGuildCommands = guildCommands.get(guild);
+        guildCommands.set(
+            guild, prevGuildCommands ? [...prevGuildCommands, commandToPut] : [commandToPut]
+        );
 
     };
     for(const module of tempModules) {
@@ -43,8 +44,13 @@ export default async function (_: modClient, tempModules: ITempModules[]) {
     };
     if(globalCommands.length < 1)
         return;
-    const loader = commandLoader[CommandType.GLOBAL];
-    await loader(globalCommands);
+    const globalLoader = commandLoader[CommandType.GLOBAL];
+    await globalLoader(globalCommands);
+    const guildLoader = commandLoader[CommandType.GUILD];
+    for(const [guildId, command] of guildCommands) {
+        const targetGuild = guildId ?? process.env.GUILD_ID;
+        await guildLoader(command, targetGuild);
+    };
 };
 
 export const contentInfo: TModuleContentInfo = {

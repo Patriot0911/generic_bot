@@ -2,9 +2,9 @@ import chillCreator from '@/entities/chillCreator/chillCreator.entity';
 import chillTemp from '@/entities/chillCreator/chillTemp.entity';
 import { Client, ChannelType, } from 'discord.js';
 import modClient from '@/modClient';
-import { chillCreators } from '../utils/constants';
-import { chillServices } from '../utils';
-import { createTempChill } from '../voiceUpdateActions';
+import { chillCreators } from '../../data/utils/constants';
+import { chillServices } from '../../data/utils';
+import { createTempChill } from '../../data/voiceUpdateActions';
 
 export default async function (cl: Client) {
     const client = <modClient> cl;

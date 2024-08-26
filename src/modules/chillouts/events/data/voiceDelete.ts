@@ -1,5 +1,5 @@
 import { DMChannel, NonThreadGuildBasedChannel, } from 'discord.js';
-import { isChillCreator, chillServices, isTempChill, } from '../utils';
+import { isChillCreator, chillServices, isTempChill, } from '../../data/utils';
 import modClient from '@/modClient';
 
 export default async function (channel: (DMChannel | NonThreadGuildBasedChannel)) {

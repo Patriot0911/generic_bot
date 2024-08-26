@@ -1,5 +1,6 @@
-import { Column, Entity, OneToMany, PrimaryColumn, } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryColumn, } from 'typeorm';
 import notificationMessage from './notificationMessage.entity';
+import subscription from './subscription.entity';
 
 export enum TwitchGuildPerms {
     ManageGuilds,
@@ -16,11 +17,20 @@ export default class twitchGuild {
     guildId: string;
 
     @Column({
+        type: 'varchar',
+    })
+    defaultChannel: string;
+
+    @Column({
         type: 'enum',
         enum: TwitchGuildPerms,
         default: TwitchGuildPerms.None,
     })
     permission: TwitchGuildPerms;
+
+    @ManyToMany(() => subscription)
+    @JoinTable()
+    subscriptions: subscription[];
 
     @OneToMany(() => notificationMessage, (notificationMessage) => notificationMessage.guild)
     messages: notificationMessage[];

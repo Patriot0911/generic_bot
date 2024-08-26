@@ -1,5 +1,5 @@
 import { ModuleContentTypes, ModuleExecuteEvents, } from '@/constants';
-import { ready, voiceDelete, voiceUpdate, } from './data/events';
+import { ready, voiceDelete, voiceUpdate, } from './data';
 import { TModuleContentInfo, } from '@/types/client';
 import modClient from '@/modClient';
 

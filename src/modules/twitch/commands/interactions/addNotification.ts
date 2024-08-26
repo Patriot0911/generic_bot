@@ -1,12 +1,30 @@
+import { TwitchGuildPerms } from '@/entities/twitch/twitchGuilds.entity';
+import subscription from '@/entities/twitch/subscription.entity';
 import { ChatInputCommandInteraction, } from 'discord.js';
-import { addNotification, } from '../data';
 import { TModuleContentInfo } from '@/types/client';
 import { TwitchService } from '../../data/services';
 import { ModuleContentTypes } from '@/constants';
+import { twitchGuild } from '@/entities/twitch';
+import { addNotification, } from '../data';
 import modClient from '@/modClient';
-import subscription from '@/entities/twitch/subscription.entity';
 
 export default async function (interaction: ChatInputCommandInteraction, client: modClient) {
+    if(!interaction.guildId)
+        return interaction.reply({
+            ephemeral: true,
+            content: 'Cannot do this without guild',
+        });
+    const guildRepository = client.dataSource.getRepository(twitchGuild);
+    const guildData = await guildRepository.findOne({
+        where: {
+            guildId: interaction.guildId,
+        }
+    });
+    if(!guildData || !guildData?.permission || guildData?.permission === TwitchGuildPerms.None)
+        return interaction.reply({
+            ephemeral: true,
+            content: 'Twitch activity is not allowed for this guild',
+        });
     const streamerName = interaction.options.getString('name');
     if(!streamerName)
         return;
@@ -20,28 +38,46 @@ export default async function (interaction: ChatInputCommandInteraction, client:
             content: userMessage,
         });
 
-    console.log(userData);
+    const subscriptionRepository = client.dataSource.getRepository(subscription);
 
-    // check & create new guild if it is nes-ry.
+    const curSub = await subscriptionRepository.findOne({
+        where: {
+            broadcaster_id: userData.id,
+        },
+    });
+
+    if(curSub) {
+        if(curSub.guilds && curSub.guilds.includes(guildData))
+            return interaction.reply({
+                ephemeral: true,
+                content: 'Already in use',
+            });
+        const guilds = curSub.guilds ?  [...curSub.guilds, guildData] : [guildData];
+        await subscriptionRepository.update(
+            curSub,
+            {
+                guilds,
+            },
+        );
+        return interaction.reply({
+            ephemeral: true,
+            content: 'Subscription added successfully',
+        });
+    };
 
     const { data, message, } = await TwitchService.callAddStreamer(userData.id);
-    console.log({
-        data: data.data,
-    });
     if(message)
         return interaction.reply({
             ephemeral: true,
             content: message,
         });
-
-    const subscriptionRepository = client.dataSource.getRepository(subscription);
-
     const subData = subscriptionRepository.create({
+        streamerName: userData.display_name,
         broadcaster_id: userData.id,
-        subscriptionId: data.data[0].id, // add guild
+        subscriptionId: data?.user.id,
+        guilds: [guildData,],
     });
-    const res = await subscriptionRepository.save(subData);
-    console.log(res);
+    await subscriptionRepository.save(subData);
     return interaction.reply({
         ephemeral: true,
         content: `Success`,

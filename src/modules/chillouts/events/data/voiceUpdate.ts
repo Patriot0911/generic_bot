@@ -1,5 +1,5 @@
-import { createTempChill, deleteTempChill } from "../voiceUpdateActions";
-import { isChillCreator, isTempChill } from "../utils";
+import { createTempChill, deleteTempChill } from "../../data/voiceUpdateActions";
+import { isChillCreator, isTempChill } from "../../data/utils";
 import { VoiceState, } from "discord.js";
 import modClient from "@/modClient";
 

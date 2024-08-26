@@ -1,19 +1,21 @@
 import { CommandType } from "@/modules/commands/data/constants";
-import { PermissionFlagsBits, SlashCommandBuilder, } from "discord.js"
+import { ChannelType, PermissionFlagsBits, SlashCommandBuilder, } from "discord.js"
 
 const command = new SlashCommandBuilder()
-    .setName('add_notification')
-    .setDescription('Add twitch notification for specifc channel')
+    .setName('add_guild')
+    .setDescription('...')
     .addStringOption(
         stringOption =>
-            stringOption.setName('name')
-            .setDescription('Twitch Name')
+            stringOption.setName('guild_id')
+            .setDescription('Guild id')
             .setRequired(true)
     )
     .addChannelOption(
         channelOption =>
-            channelOption.setName('channel')
-            .setDescription('Channel')
+            channelOption.setName('default_channel')
+            .setDescription('Channel id')
+            .setRequired(true)
+            .addChannelTypes(ChannelType.GuildText)
     )
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels);
 
