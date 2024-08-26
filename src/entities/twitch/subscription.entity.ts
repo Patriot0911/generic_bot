@@ -28,6 +28,10 @@ export default class subscription {
     @JoinTable()
     guilds: twitchGuild[];
 
-    @OneToMany(() => notificationMessage, (notificationMessage) => notificationMessage.subscription)
+    @OneToMany(
+        () => notificationMessage,
+        (notificationMessage) => notificationMessage.subscription, {
+           nullable: true
+    })
     messages: notificationMessage[];
 };

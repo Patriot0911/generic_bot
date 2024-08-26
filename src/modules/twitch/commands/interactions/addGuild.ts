@@ -14,13 +14,14 @@ export default async function (interaction: ChatInputCommandInteraction, client:
             content: 'Cannot do this without guild',
         });
     const targetId = interaction.options.getString('guild_id');
-    const defaultChannel = interaction.options.getChannel('default_channel');
+    const channelId = interaction.options.getString('default_channel');
     if(!targetId)
         return interaction.reply({
             ephemeral: true,
             content: 'Guild id is required',
         });
-    if(!defaultChannel || defaultChannel.type !== ChannelType.GuildText)
+    const channel = channelId && client.guilds.cache.get(targetId)?.channels.cache.get(channelId);
+    if(!channelId || !channel || channel.type !== ChannelType.GuildText)
         return interaction.reply({
             ephemeral: true,
             content: 'Invalid default channel',
@@ -52,7 +53,7 @@ export default async function (interaction: ChatInputCommandInteraction, client:
             await guildRepository.upsert({
                     ...targetGuildData,
                     guildId: targetId,
-                    defaultChannel: defaultChannel.id,
+                    defaultChannel: channelId,
                     permission: TwitchGuildPerms.Listen,
                 },
                 {

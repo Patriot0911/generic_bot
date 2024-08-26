@@ -7,6 +7,7 @@ import { ModuleContentTypes } from '@/constants';
 import { twitchGuild } from '@/entities/twitch';
 import { addNotification, } from '../data';
 import modClient from '@/modClient';
+import { CallTracker } from 'assert';
 
 export default async function (interaction: ChatInputCommandInteraction, client: modClient) {
     if(!interaction.guildId)
@@ -44,21 +45,23 @@ export default async function (interaction: ChatInputCommandInteraction, client:
         where: {
             broadcaster_id: userData.id,
         },
+        relations: {
+            guilds: true,
+        },
     });
 
     if(curSub) {
-        if(curSub.guilds && curSub.guilds.includes(guildData))
+        const guildIdList = curSub.guilds ? curSub.guilds.map(item => item.guildId) : [];
+        if(curSub.guilds && guildIdList.includes(guildData.guildId))
             return interaction.reply({
                 ephemeral: true,
                 content: 'Already in use',
             });
         const guilds = curSub.guilds ?  [...curSub.guilds, guildData] : [guildData];
-        await subscriptionRepository.update(
-            curSub,
-            {
-                guilds,
-            },
-        );
+        await subscriptionRepository.save({
+            ...curSub,
+            guilds,
+        });
         return interaction.reply({
             ephemeral: true,
             content: 'Subscription added successfully',

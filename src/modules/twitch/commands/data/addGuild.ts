@@ -1,5 +1,5 @@
 import { CommandType } from "@/modules/commands/data/constants";
-import { ChannelType, PermissionFlagsBits, SlashCommandBuilder, } from "discord.js"
+import { PermissionFlagsBits, SlashCommandBuilder, } from "discord.js"
 
 const command = new SlashCommandBuilder()
     .setName('add_guild')
@@ -10,12 +10,11 @@ const command = new SlashCommandBuilder()
             .setDescription('Guild id')
             .setRequired(true)
     )
-    .addChannelOption(
-        channelOption =>
-            channelOption.setName('default_channel')
+    .addStringOption(
+        addStringOption =>
+            addStringOption.setName('default_channel')
             .setDescription('Channel id')
             .setRequired(true)
-            .addChannelTypes(ChannelType.GuildText)
     )
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels);
 
