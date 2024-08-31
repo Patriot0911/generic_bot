@@ -19,6 +19,9 @@ export default class notificationMessage {
     })
     json: JSON;
 
+    // add status: active, deactivated
+    // add tag restriction
+
     @Column({
         type: 'varchar',
         nullable: true,

@@ -6,6 +6,7 @@ import { TwitchService } from '../../data/services';
 import { ModuleContentTypes } from '@/constants';
 import { twitchGuild } from '@/entities/twitch';
 import modClient from '@/modClient';
+import subscription from '@/entities/twitch/subscription.entity';
 
 export default async function (interaction: ChatInputCommandInteraction, client: modClient) {
     if(!interaction.guildId)
@@ -29,6 +30,10 @@ export default async function (interaction: ChatInputCommandInteraction, client:
         return;
     const { message: userMessage, } = await TwitchService.deleteSubscription(subId);
     // TODO
+    const subscriptionRepository = client.dataSource.getRepository(subscription);
+    await subscriptionRepository.delete({
+        subscriptionId: subId,
+    });
     if(userMessage)
         return interaction.reply({
             ephemeral: true,

@@ -7,7 +7,6 @@ import { ModuleContentTypes } from '@/constants';
 import { twitchGuild } from '@/entities/twitch';
 import { addNotification, } from '../data';
 import modClient from '@/modClient';
-import { CallTracker } from 'assert';
 
 export default async function (interaction: ChatInputCommandInteraction, client: modClient) {
     if(!interaction.guildId)

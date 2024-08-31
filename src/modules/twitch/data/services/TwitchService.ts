@@ -24,6 +24,7 @@ class TwitchService {
             const { data, } = await axios.get(
                 `${this.baseApiUrl}/eventsub/subscriptions`, { headers, }
             );
+            console.log(data);
             return {
                 data,
             };
@@ -75,6 +76,7 @@ class TwitchService {
                 secret: process.env.TWITCH_SECRET,
             },
         };
+        console.log(data);
         try {
             const { data: resData, } = await axios.post(
                 `${this.baseApiUrl}/eventsub/subscriptions`, data, { headers, }

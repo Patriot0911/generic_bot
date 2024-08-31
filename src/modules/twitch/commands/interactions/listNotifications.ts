@@ -21,11 +21,11 @@ export default async function (interaction: ChatInputCommandInteraction, client:
             },
         },
     });
-    const subIdList = data.map((item: any) => item.id);
+    const subIdList = data.filter((item: any) => item.status == 'enabled').map((item: any) => item.id);
     const mappedSubs = subscriptions.map(
         item => `${
             subIdList.includes(item.subscriptionId) ? ':green_circle:' : ':red_circle:'
-        } ${item.streamerName}\n||[\`\`${item.subscriptionId}\`\`]||`,
+        } ${item.streamerName}\n||[\`\`${item.subscriptionId}\`\`]||\n`,
     );
     interaction.reply({
         ephemeral: true,

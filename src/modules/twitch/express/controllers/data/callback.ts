@@ -1,5 +1,5 @@
-import { TwitchMessageTypes } from '../constants';
-import { webHookActions, } from '../services';
+import { TwitchMessageTypes } from '@/modules/twitch/data/constants';
+import { webHookActions } from '@/modules/twitch/data/services';
 import { Request, Response, } from 'express';
 
 export default async (req: Request, res: Response) => {
