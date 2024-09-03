@@ -5,10 +5,10 @@
 
         "outDir": "dist",
         "rootDir": "./src/",
-        "strict": true,
+        "strict": false,
         "sourceMap": true,
 
-        "skipLibCheck": true,
+        "skipLibCheck": false,
         "importHelpers": true,
         "removeComments": true,
         "esModuleInterop": true,

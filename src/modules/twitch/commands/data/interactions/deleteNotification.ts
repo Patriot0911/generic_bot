@@ -1,8 +1,8 @@
 import { TwitchGuildPerms } from '@/entities/twitch/twitchGuilds.entity';
-import deleteNotification from '../data/deleteNotification';
+import deleteNotification from '../deleteNotification';
 import { ChatInputCommandInteraction, } from 'discord.js';
 import { TModuleContentInfo } from '@/types/client';
-import { TwitchService } from '../../data/services';
+import { TwitchService } from '../../../data/services';
 import { ModuleContentTypes } from '@/constants';
 import { twitchGuild } from '@/entities/twitch';
 import modClient from '@/modClient';

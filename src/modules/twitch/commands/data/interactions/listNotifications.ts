@@ -1,9 +1,9 @@
 import subscription from '@/entities/twitch/subscription.entity';
 import { ChatInputCommandInteraction } from 'discord.js';
-import { TwitchService } from '../../data/services';
+import { TwitchService } from '../../../data/services';
 import { TModuleContentInfo } from '@/types/client';
 import { ModuleContentTypes } from '@/constants';
-import { listNotifications, } from '../data';
+import { listNotifications, } from '..';
 import modClient from '@/modClient';
 
 export default async function (interaction: ChatInputCommandInteraction, client: modClient) {

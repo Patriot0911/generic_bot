@@ -1,8 +1,9 @@
-import { REST, Routes, SlashCommandBuilder } from 'discord.js';
+import * as IModCommands from '@/modules/commands/data/types';
+import { REST, Routes, } from 'discord.js';
 import { CommandType } from './constants';
 
 const commandsLoader = {
-    [CommandType.GUILD]: async (commands: SlashCommandBuilder[], guildId?: string) => {
+    [CommandType.GUILD]: async (commands: IModCommands.TShortCommandBody[], guildId?: string) => {
         const token = process.env.TOKEN;
         if(!token)
             throw new Error('Invalid token');
@@ -19,7 +20,7 @@ const commandsLoader = {
         );
         return data;
     },
-    [CommandType.GLOBAL]: async (commands: SlashCommandBuilder[]) => {
+    [CommandType.GLOBAL]: async (commands: IModCommands.TShortCommandBody[]) => {
         const token = process.env.TOKEN;
         if(!token)
             throw new Error('Invalid token');

@@ -4,7 +4,7 @@ import { TModuleContentInfo } from '@/types/client';
 import { ModuleContentTypes } from '@/constants';
 import { twitchGuild } from '@/entities/twitch';
 import { TypeORMError } from 'typeorm';
-import { addGuild, } from '../data';
+import { addGuild, } from '..';
 import modClient from '@/modClient';
 
 export default async function (interaction: ChatInputCommandInteraction, client: modClient) {
