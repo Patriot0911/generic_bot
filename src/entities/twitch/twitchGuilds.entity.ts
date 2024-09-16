@@ -1,5 +1,5 @@
 import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryColumn, } from 'typeorm';
-import notificationMessage from './notificationMessage.entity';
+import notificationMessage from './notification.entity';
 import subscription from './subscription.entity';
 
 export enum TwitchGuildPerms {

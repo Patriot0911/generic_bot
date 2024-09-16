@@ -1,6 +1,6 @@
 import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn, } from 'typeorm';
 import twitchGuild from './twitchGuilds.entity';
-import notificationMessage from './notificationMessage.entity';
+import notification from './notification.entity';
 
 @Entity()
 export default class subscription {
@@ -29,9 +29,9 @@ export default class subscription {
     guilds: twitchGuild[];
 
     @OneToMany(
-        () => notificationMessage,
+        () => notification,
         (notificationMessage) => notificationMessage.subscription, {
            nullable: true
     })
-    messages: notificationMessage[];
+    notifications: notification[];
 };

@@ -3,23 +3,27 @@ import twitchGuild from './twitchGuilds.entity';
 import subscription from './subscription.entity';
 
 @Entity()
-export default class notificationMessage {
+export default class notification {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
     @ManyToOne(() => twitchGuild, (twitchGuild) => twitchGuild.messages)
     guild: twitchGuild;
 
-    @ManyToOne(() => subscription, (subscription) => subscription.messages)
+    @ManyToOne(() => subscription, (subscription) => subscription.notifications)
     subscription: subscription;
 
     @Column({
         type: 'json',
         nullable: true,
     })
-    json: JSON;
+    embed?: JSON;
 
-    // add status: active, deactivated
+    @Column({
+        type: 'varchar',
+        nullable: true,
+    })
+    webhook?: string;
     // add tag restriction
 
     @Column({

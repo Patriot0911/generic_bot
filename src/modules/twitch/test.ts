@@ -1,4 +1,4 @@
-import type { ChatInputCommandInteraction, } from 'discord.js';
+import { PermissionFlagsBits, type ChatInputCommandInteraction, } from 'discord.js';
 import { CommandType } from '@/modules/commands/data/constants';
 import * as IModCommands from '../commands/data/types';
 import { TModuleContentInfo } from '@/types/client';
@@ -16,6 +16,7 @@ export default (_: modClient) => class Command extends IModCommands.IModSlashCom
     commandInfo: IModCommands.TCommandInfo = {
         name: 'test',
         description: 'des',
+        default_member_permissions: PermissionFlagsBits.ManageChannels.toString(),
         extraInfo: {
             type: CommandType.GLOBAL,
         },
