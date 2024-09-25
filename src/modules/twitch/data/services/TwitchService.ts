@@ -1,6 +1,5 @@
-import axios, { AxiosError, } from "axios";
+import axios, { AxiosError, } from 'axios';
 
-// add validation for token
 class TwitchService {
     static staticBaseUrl = 'https://static-cdn.jtvnw.net';
     static baseApiUrl = 'https://api.twitch.tv/helix';
@@ -8,8 +7,6 @@ class TwitchService {
     static callbackUrl = process.env.TWITCH_WEBHOOK_CALLBACK;
     static clientId = process.env.TWITCH_CLIENT_ID;
     static token = process.env.TWITCH_TOKEN;
-
-    constructor() {};
 
     private static getHeaders() {
         return {

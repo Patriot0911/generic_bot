@@ -1,6 +1,7 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, } from 'typeorm';
-import twitchGuild from './twitchGuilds.entity';
 import subscription from './subscription.entity';
+import twitchGuild from './twitchGuilds.entity';
+import { APIEmbed, } from 'discord.js';
 
 @Entity()
 export default class notification {
@@ -17,14 +18,13 @@ export default class notification {
         type: 'json',
         nullable: true,
     })
-    embed?: JSON;
+    embed?: APIEmbed;
 
     @Column({
         type: 'varchar',
         nullable: true,
     })
     webhook?: string;
-    // add tag restriction
 
     @Column({
         type: 'varchar',

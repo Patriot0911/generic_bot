@@ -28,6 +28,9 @@ export default (_: modClient) => class Command extends IModCommands.IModSlashCom
             relations: {
                 subscriptions: true,
             },
+            select: {
+                subscriptions: true,
+            },
         });
         if(!guildData)
             return;
@@ -43,7 +46,7 @@ export default (_: modClient) => class Command extends IModCommands.IModSlashCom
             .setCustomId('select_twitch_notification')
             .setMaxValues(1)
             .setDisabled(guildData.subscriptions.length < 1)
-        if(guildData.subscriptions.length > 1) {
+        if(guildData.subscriptions.length > 0) {
             for(const sub of guildData.subscriptions) {
                 const option = new StringSelectMenuOptionBuilder({
                     label: sub.streamerName,
@@ -60,7 +63,7 @@ export default (_: modClient) => class Command extends IModCommands.IModSlashCom
             });
         };
         selectorRow.addComponents(notificationSelector);
-        interaction.reply({
+        return interaction.reply({
             ephemeral: true,
             components: [
                 buttonRow,
