@@ -1,24 +1,23 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, } from 'typeorm';
 import subscription from './subscription.entity';
 import twitchGuild from './twitchGuilds.entity';
-import { APIEmbed, } from 'discord.js';
 
 @Entity()
 export default class notification {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @ManyToOne(() => twitchGuild, (twitchGuild) => twitchGuild.messages)
+    @ManyToOne(() => twitchGuild, (twitchGuild) => twitchGuild.notifications)
     guild: twitchGuild;
 
     @ManyToOne(() => subscription, (subscription) => subscription.notifications)
     subscription: subscription;
 
     @Column({
-        type: 'json',
+        type: 'varchar',
         nullable: true,
     })
-    embed?: APIEmbed;
+    embed?: string;
 
     @Column({
         type: 'varchar',

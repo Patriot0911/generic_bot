@@ -33,5 +33,5 @@ export default class twitchGuild {
     subscriptions: subscription[];
 
     @OneToMany(() => notificationMessage, (notificationMessage) => notificationMessage.guild)
-    messages: notificationMessage[];
+    notifications: notificationMessage[];
 };

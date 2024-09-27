@@ -1,15 +1,16 @@
-import { EmbedBuilder, ModalSubmitInteraction, } from 'discord.js';
 import notification from '@/entities/twitch/notification.entity';
 import subscription from '@/entities/twitch/subscription.entity';
+import { ModalSubmitInteraction, } from 'discord.js';
 import { TModuleContentInfo, } from '@/types/client';
 import { ModuleContentTypes, } from '@/constants';
 import { TwitchService, } from '../data/services';
+import { twitchGuild, } from '@/entities/twitch';
 import modClient from '@/modClient';
-import { twitchGuild } from '@/entities/twitch';
 
 const isJSON = (arg: string) => {
+    const str = JSON.stringify(arg);
     try {
-        return !!JSON.parse(arg);
+        return !!JSON.parse(str);
     } catch(e) {
         return false;
     };
@@ -43,7 +44,7 @@ export default async function (interaction: ModalSubmitInteraction, client: modC
             ephemeral: true,
             content: 'Cannot find such streamer',
         });
-    const validatedEmbed = isJSON(embed) && new EmbedBuilder(embed as any);
+    const validatedEmbed = isJSON(embed) && embed.replaceAll(/\n/g,'');
     if(embed && !validatedEmbed)
         return interaction.reply({
             ephemeral:  true,
@@ -68,7 +69,7 @@ export default async function (interaction: ModalSubmitInteraction, client: modC
             content: 'Notification is already exist',
         });
     const newNotification = notificationRepository.create({
-        embed: validatedEmbed && validatedEmbed.toJSON(),
+        embed: validatedEmbed && validatedEmbed,
         webhook,
         subscription: {
             id: subscriptionData.id,

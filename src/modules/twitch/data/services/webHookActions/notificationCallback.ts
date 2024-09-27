@@ -1,11 +1,14 @@
 import subscription from '@/entities/twitch/subscription.entity';
+import { notificationFallback, } from '../../utils/embeds';
 import TwitchService from '../TwitchService';
-import { Request } from 'express';
+import Handlebars from 'handlebars';
+import { Request, } from 'express';
+import { time, } from 'discord.js';
+import axios from 'axios';
 
 export default async (req: Request) => {
-    const { type } = req.body.subscription;
-    const { event } = req.body;
-    console.log(event);
+    const { type, } = req.body.subscription;
+    const { event, } = req.body;
     if(type !== 'stream.online')
         return {
             status: 200,
@@ -23,9 +26,8 @@ export default async (req: Request) => {
         },
         relations: {
             guilds: {
-                messages: true,
+                notifications: true,
             },
-            messages: true,
         },
     });
     if(!subscriptionData || !subscriptionData.guilds || subscriptionData.guilds.length < 1)
@@ -33,16 +35,27 @@ export default async (req: Request) => {
             status: 200,
             data: [],
         };
-    const displayName = event.broadcaster_user_name;
     const userLogin = event.broadcaster_user_login;
-    const embed = {
-        title: displayName,
-        color: 12452860,
-        url: TwitchService.getStreamUrl(userLogin),
-        image: {
-            url: TwitchService.getStreamPreview(userLogin),
-        },
-        timestamp: event.started_at,
+    const { data: streamerInfo, } = await TwitchService.getStreamer(userLogin);
+    const started_at = streamerInfo.started_at ? `${time(new Date(streamerInfo.started_at))}` : `${time(new Date())}`
+    const streamContext = {
+        started_at,
+        credits: 'Overwatch UA',
+        stream_title: streamerInfo.title,
+        game_name: streamerInfo.game_name,
+        timestamp: new Date().toISOString(),
+        display_name: streamerInfo.display_name,
+        stream_thumbnail_url: streamerInfo.thumbnail_url,
+        stream_url: TwitchService.getStreamUrl(userLogin),
+        stream_preview: TwitchService.getStreamPreview(userLogin),
+    };
+    const fallbackEmbed = JSON.parse(notificationFallback(streamContext));
+    const createEmbedWithContext = (embed: string) => {
+        try {
+            return JSON.parse(Handlebars.compile(embed)(streamContext));
+        } catch(e) {
+            return fallbackEmbed;
+        };
     };
     for(const guildData of subscriptionData.guilds) {
         const defaultChannelId = guildData.defaultChannel;
@@ -50,21 +63,35 @@ export default async (req: Request) => {
         if(!guild)
             continue;
         const defaultChannel = guild.channels.cache.get(defaultChannelId);
-        if(!guildData.messages || guildData.messages.length < 1) {
-            if(!defaultChannel || !defaultChannel.isTextBased())
-                continue;
-            defaultChannel.send({
-                embeds: [embed],
-            });
+        if(!guildData.notifications)
             continue;
-        };
-        for(const message of guildData.messages) {
-            const channel = message.channelId ? guild.channels.cache.get(message.channelId) : defaultChannel;
+        for(const notification of guildData.notifications) {
+            const channel = notification.channelId ? guild.channels.cache.get(notification.channelId) : defaultChannel;
             if(!channel || !channel.isTextBased())
                 continue;
-            channel.send({
-                embeds: [embed],
-            });
+            const embed = notification.embed ? createEmbedWithContext(notification.embed) : fallbackEmbed;
+            if(notification.webhook) {
+                axios.post(notification.webhook, {
+                    content: null,
+                    embeds: [embed],
+                }).catch(
+                    (e) => {
+                        channel.send({
+                            embeds: [fallbackEmbed],
+                        });
+                    },
+                );
+            } else {
+                channel.send({
+                    embeds: [embed],
+                }).catch(
+                    (e) => {
+                        channel.send({
+                            embeds: [fallbackEmbed],
+                        });
+                    }
+                );
+            };
         };
     };
     return {
