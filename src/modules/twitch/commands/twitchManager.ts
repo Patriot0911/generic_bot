@@ -43,7 +43,7 @@ export default (_: modClient) => class Command extends IModCommands.IModSlashCom
         );
         const selectorRow = new ActionRowBuilder<StringSelectMenuBuilder>();
         const notificationSelector = new StringSelectMenuBuilder()
-            .setCustomId('select_twitch_notification')
+            .setCustomId('select_twitch_subscription')
             .setMaxValues(1)
             .setDisabled(guildData.subscriptions.length < 1)
         if(guildData.subscriptions.length > 0) {

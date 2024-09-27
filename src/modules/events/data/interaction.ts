@@ -14,7 +14,7 @@ export default function (interaction: Interaction) {
     if(!moduleGroup)
         return;
     const subInteraction = (<ModalSubmitInteraction | MessageComponentInteraction> interaction)
-    const callback = client.getModuleContent(moduleGroup, subInteraction.customId);
+    const callback = client.getModuleContent(moduleGroup, subInteraction.customId.split('|')[0]);
     if(!callback)
         return;
     return callback(interaction, client);
