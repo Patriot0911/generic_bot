@@ -5,7 +5,7 @@ export default Handlebars.compile(JSON.stringify({
     author: {
         name: "Twitch Notification",
     },
-    description: `{{display_name}} is now online!`,
+    description: `**{{display_name}}** is now online!`,
     url: `{{stream_url}}`,
     color: 15342579,
     fields: [

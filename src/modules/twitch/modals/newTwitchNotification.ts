@@ -1,37 +1,12 @@
+import findSubscriptionOrCrate from '../data/utils/findSubscriptionOrCrate';
 import notification from '@/entities/twitch/notification.entity';
-import subscription from '@/entities/twitch/subscription.entity';
 import { ModalSubmitInteraction, } from 'discord.js';
 import { TModuleContentInfo, } from '@/types/client';
 import { ModuleContentTypes, } from '@/constants';
 import { TwitchService, } from '../data/services';
 import { twitchGuild, } from '@/entities/twitch';
 import modClient from '@/modClient';
-
-const isJSON = (arg: string) => {
-    const str = JSON.stringify(arg);
-    try {
-        return !!JSON.parse(str);
-    } catch(e) {
-        return false;
-    };
-};
-
-const findSubscriptionOrCrate = async (client: modClient, streamerId: string, streamerName: string) => {
-    const subscriptionRepository = client.dataSource.getRepository(subscription);
-    const subscriptionData = await subscriptionRepository.findOne({
-        where: {
-            broadcaster_id: streamerId,
-        },
-    });
-    if(!subscriptionData) {
-        const newSubscription = subscriptionRepository.create({
-            broadcaster_id: streamerId,
-            streamerName: streamerName,
-        });
-        return subscriptionRepository.save(newSubscription);
-    };
-    return subscriptionData;
-};
+import { isJSON } from '@/utils';
 
 export default async function (interaction: ModalSubmitInteraction, client: modClient) {
     const guildId = interaction.guildId;
