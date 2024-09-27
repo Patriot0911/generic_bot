@@ -59,6 +59,9 @@ export default async function (interaction: ModalSubmitInteraction, client: modC
         where: {
             guildId,
         },
+        relations: {
+            subscriptions: true,
+        },
         select: {
             subscriptions: true,
         },
@@ -68,11 +71,14 @@ export default async function (interaction: ModalSubmitInteraction, client: modC
             ephemeral: true,
             content: 'Something went wrong with guild permissions',
         });
-    if(guildData.subscriptions)
-        guildData.subscriptions.push(subscriptionData);
-    guildData.subscriptions = [
-        subscriptionData,
-    ];
+    if(!guildData.subscriptions) {
+        guildData.subscriptions = [
+            subscriptionData,
+        ];
+    } else {
+        if(!guildData.subscriptions.find((item) => item.subscriptionId === subscriptionData.subscriptionId))
+            guildData.subscriptions.push(subscriptionData);
+    };
     await guildRepository.save(guildData);
     return interaction.reply({
         ephemeral: true,

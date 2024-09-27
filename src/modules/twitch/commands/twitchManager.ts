@@ -47,14 +47,16 @@ export default (_: modClient) => class Command extends IModCommands.IModSlashCom
             .setMaxValues(1)
             .setDisabled(guildData.subscriptions.length < 1)
         if(guildData.subscriptions.length > 0) {
+            const options: StringSelectMenuOptionBuilder[] = [];
             for(const sub of guildData.subscriptions) {
                 const option = new StringSelectMenuOptionBuilder({
                     label: sub.streamerName,
                     value: sub.broadcaster_id,
                     description: sub.subscriptionId,
                 });
-                notificationSelector.addOptions(option);
+                options.push(option);
             };
+            notificationSelector.addOptions(options);
         } else {
             notificationSelector.addOptions({
                 default: true,
@@ -75,7 +77,7 @@ export default (_: modClient) => class Command extends IModCommands.IModSlashCom
 
     commandInfo: IModCommands.TCommandInfo = {
         name: 'twitch_manager',
-        description: '...',
+        description: 'Twitch Notification Manager',
         extraInfo: {
             type: CommandType.GLOBAL,
         },
