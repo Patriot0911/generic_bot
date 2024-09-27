@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonInteraction, ComponentType, ModalBuilder, TextInputStyle, } from 'discord.js';
+import { ButtonInteraction, ComponentType, ModalBuilder, TextInputStyle, } from 'discord.js';
 import { TModuleContentInfo, } from '@/types/client';
 import { ModuleContentTypes, } from '@/constants';
 import modClient from '@/modClient';
