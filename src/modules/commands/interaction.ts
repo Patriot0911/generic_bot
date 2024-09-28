@@ -1,7 +1,8 @@
 import { ModuleContentTypes, ModuleExecuteEvents, } from '@/constants';
+import { commandInteractions } from './data/constants';
 import { TModuleContentInfo } from '@/types/client';
-import modClient from '@/modClient';
 import { Interaction } from 'discord.js';
+import modClient from '@/modClient';
 
 export default function (client: modClient) {
     client.on(
@@ -9,7 +10,7 @@ export default function (client: modClient) {
         (interaction: Interaction) => {
             if(!interaction.isCommand())
                 return;
-            const commandCallback = client.getModuleContent('commands', interaction.commandName);
+            const commandCallback = commandInteractions.get(interaction.commandName);
             if(!commandCallback)
                 return;
             commandCallback(interaction, client);
