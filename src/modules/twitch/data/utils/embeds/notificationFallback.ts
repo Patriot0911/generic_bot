@@ -3,11 +3,12 @@ import Handlebars from 'handlebars';
 export default Handlebars.compile(JSON.stringify({
     title: "{{stream_title}}",
     author: {
-        name: "Twitch Notification",
+        name:   "[{{display_name}}] Twitch Notification",
+        url:    "{{stream_url}}",
+        icon_url: "{{stream_thumbnail_url}}",
     },
-    description: `**{{display_name}}** is now online!`,
     url: `{{stream_url}}`,
-    color: 15342579,
+    color: 10180863,
     fields: [
         {
             name: "Game",

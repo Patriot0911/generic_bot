@@ -9,7 +9,7 @@ import axios from 'axios';
 export default async (req: Request) => {
     const { type, } = req.body.subscription;
     const { event, } = req.body;
-    if(type !== 'stream.online')
+    if(type != 'stream.online')
         return {
             status: 200,
             data: [],
@@ -29,6 +29,9 @@ export default async (req: Request) => {
                 notifications: true,
             },
         },
+        select: {
+            guilds: true,
+        }
     });
     if(!subscriptionData || !subscriptionData.guilds || subscriptionData.guilds.length < 1)
         return {

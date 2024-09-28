@@ -1,10 +1,10 @@
 import findSubscriptionOrCrate from '../data/utils/findSubscriptionOrCrate';
 import notification from '@/entities/twitch/notification.entity';
+import { subscription, twitchGuild, } from '@/entities/twitch';
 import { ModalSubmitInteraction, } from 'discord.js';
 import { TModuleContentInfo, } from '@/types/client';
 import { ModuleContentTypes, } from '@/constants';
 import { TwitchService, } from '../data/services';
-import { twitchGuild, } from '@/entities/twitch';
 import modClient from '@/modClient';
 import { isJSON } from '@/utils';
 
@@ -71,6 +71,11 @@ export default async function (interaction: ModalSubmitInteraction, client: modC
             ephemeral: true,
             content: 'Something went wrong with guild permissions',
         });
+    const subscriptionRepository = client.dataSource.getRepository(subscription);
+    if(!subscriptionData.guilds)
+        subscriptionData.guilds = [];
+    subscriptionData.guilds.push(guildData);
+    await subscriptionRepository.save(subscriptionData);
     if(!guildData.subscriptions) {
         guildData.subscriptions = [
             subscriptionData,
