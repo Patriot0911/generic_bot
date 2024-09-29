@@ -30,10 +30,10 @@ export default async (req: Request) => {
             },
         },
         select: {
-            guilds: true,
+            notifications: true,
         }
     });
-    if(!subscriptionData || !subscriptionData.guilds || subscriptionData.guilds.length < 1)
+    if(!subscriptionData || !subscriptionData.notifications || subscriptionData.notifications.length < 1)
         return {
             status: 200,
             data: [],
@@ -61,6 +61,7 @@ export default async (req: Request) => {
         };
     };
     for(const notification of subscriptionData.notifications) {
+        console.log(notification);
         if(!notification || !notification.guild)
             continue;
         const guild = req.client.guilds.cache.get(notification.guild.guildId);
