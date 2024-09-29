@@ -44,7 +44,7 @@ export default async function (interaction: ModalSubmitInteraction, client: modC
             content: 'Notification is already exist',
         });
     const newNotification = notificationRepository.create({
-        embed: validatedEmbed && validatedEmbed,
+        embed: validatedEmbed ? validatedEmbed : null,
         webhook,
         subscription: {
             id: subscriptionData.id,

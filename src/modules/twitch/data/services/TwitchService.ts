@@ -21,7 +21,6 @@ class TwitchService {
             const { data, } = await axios.get(
                 `${this.baseApiUrl}/eventsub/subscriptions`, { headers, }
             );
-            console.log(data);
             return {
                 data,
             };

@@ -25,8 +25,8 @@ export default async (req: Request) => {
             broadcaster_id: event.broadcaster_user_id,
         },
         relations: {
-            guilds: {
-                notifications: true,
+            notifications: {
+                guild: true,
             },
         },
         select: {
@@ -60,41 +60,40 @@ export default async (req: Request) => {
             return fallbackEmbed;
         };
     };
-    for(const guildData of subscriptionData.guilds) {
-        const defaultChannelId = guildData.defaultChannel;
-        const guild = req.client.guilds.cache.get(guildData.guildId);
+    for(const notification of subscriptionData.notifications) {
+        if(!notification || !notification.guild)
+            continue;
+        const guild = req.client.guilds.cache.get(notification.guild.guildId);
         if(!guild)
             continue;
-        const defaultChannel = guild.channels.cache.get(defaultChannelId);
-        if(!guildData.notifications)
+        const defaultChannelId = notification.guild.defaultChannel;
+        const channel = notification.channelId ? (
+            guild.channels.cache.get(notification.channelId) ?? guild.channels.cache.get(defaultChannelId)
+        ) : guild.channels.cache.get(defaultChannelId);
+        if(!channel || !channel.isTextBased())
             continue;
-        for(const notification of guildData.notifications) {
-            const channel = notification.channelId ? guild.channels.cache.get(notification.channelId) : defaultChannel;
-            if(!channel || !channel.isTextBased())
-                continue;
-            const embed = notification.embed ? createEmbedWithContext(notification.embed) : fallbackEmbed;
-            if(notification.webhook) {
-                axios.post(notification.webhook, {
-                    content: null,
-                    embeds: [embed],
-                }).catch(
-                    (e) => {
-                        channel.send({
-                            embeds: [fallbackEmbed],
-                        });
-                    },
-                );
-            } else {
-                channel.send({
-                    embeds: [embed],
-                }).catch(
-                    (e) => {
-                        channel.send({
-                            embeds: [fallbackEmbed],
-                        });
-                    }
-                );
-            };
+        const embed = notification.embed ? createEmbedWithContext(notification.embed) : fallbackEmbed;
+        if(notification.webhook) {
+            axios.post(notification.webhook, {
+                content: null,
+                embeds: [embed],
+            }).catch(
+                (e) => {
+                    channel.send({
+                        embeds: [fallbackEmbed],
+                    });
+                },
+            );
+        } else {
+            channel.send({
+                embeds: [embed],
+            }).catch(
+                (e) => {
+                    channel.send({
+                        embeds: [fallbackEmbed],
+                    });
+                }
+            );
         };
     };
     return {
