@@ -1,7 +1,7 @@
 import { notification, twitchGuild, } from '@/entities/twitch';
 import { TModuleContentInfo, } from '@/types/client';
 import { ModuleContentTypes, } from '@/constants';
-import { ButtonInteraction, } from 'discord.js';
+import { ButtonInteraction, SlashCommandStringOption, } from 'discord.js';
 import modClient from '@/modClient';
 
 export default async function (interaction: ButtonInteraction, client: modClient) {
@@ -32,13 +32,12 @@ export default async function (interaction: ButtonInteraction, client: modClient
                 },
             },
         });
+        if(!selectedNotification)
+            throw new Error('Something went wrong with selected notification');
         if(guildNotificationsForThisSub && guildNotificationsForThisSub.length <= 1) {
             const guildData = await guildRepository.findOne({
                 where: {
                     guildId: interaction.guildId,
-                    notifications: {
-                        id: notificationId,
-                    },
                 },
                 select: {
                     subscriptions: true,
@@ -49,17 +48,10 @@ export default async function (interaction: ButtonInteraction, client: modClient
                     notifications: true,
                 },
             });
-            if(guildData) {
-                if(guildData.notifications) {
-                    guildData.notifications = guildData.notifications.filter(
-                        item => item.id !== notificationId
-                    );
-                };
-                if(guildData.subscriptions) {
-                    guildData.subscriptions = guildData.subscriptions.filter(
-                        item => item.broadcaster_id !== selectedNotification.subscription.broadcaster_id
-                    );
-                };
+            if(guildData && guildData.subscriptions) {
+                guildData.subscriptions = guildData.subscriptions.filter(
+                    item => item.broadcaster_id !== selectedNotification.subscription.broadcaster_id
+                );
                 await guildRepository.save(guildData);
             };
         };

@@ -27,11 +27,14 @@ export default (_: modClient) => class Command extends IModCommands.IModSlashCom
             },
             relations: {
                 subscriptions: true,
+                notifications: true,
             },
             select: {
                 subscriptions: true,
+                notifications: true,
             },
         });
+        console.log(guildData);
         if(!guildData)
             return;
         const buttonRow = new ActionRowBuilder<ButtonBuilder>();
