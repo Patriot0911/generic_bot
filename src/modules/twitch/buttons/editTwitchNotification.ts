@@ -45,7 +45,7 @@ export default async function (interaction: ButtonInteraction, client: modClient
                         customId: `embed|${guildId}`,
                         type: ComponentType.TextInput,
                         style: TextInputStyle.Paragraph,
-                        value: selectedNotification.embed ?? ' ',
+                        value: selectedNotification.embed ? selectedNotification.embed : undefined,
                         placeholder: 'JSON Embed Object or Embed name if you already have a preset',
                     },
                 ],

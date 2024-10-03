@@ -26,7 +26,7 @@ export default async function (interaction: ModalSubmitInteraction, client: modC
             ephemeral: true,
             content: 'Cannot find notification',
         });
-    notificationData.embed = validatedEmbed;
+    notificationData.embed = validatedEmbed ? validatedEmbed : null;
     notificationData.webhook = webhook;
     await notificationRepository.save(notificationData);
     return interaction.reply({

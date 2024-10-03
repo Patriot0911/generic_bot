@@ -34,7 +34,6 @@ export default (_: modClient) => class Command extends IModCommands.IModSlashCom
                 notifications: true,
             },
         });
-        console.log(guildData);
         if(!guildData)
             return;
         const buttonRow = new ActionRowBuilder<ButtonBuilder>();
