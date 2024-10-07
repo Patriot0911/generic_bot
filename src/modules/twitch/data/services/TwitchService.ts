@@ -111,9 +111,9 @@ class TwitchService {
         return `https://www.twitch.tv/${streamerName}`;
     };
 
-    static getStreamPreview(streamerName: string, size = { x: 400, y: 225, }) {
+    static getStreamPreview(streamerName: string, size = { x: 900, y: 600, }) {
         const sizesStr = `${size.x}x${size.y}`;
-        return `${this.staticBaseUrl}/previews-ttv/live_user_${streamerName}-${sizesStr}.jpg`;
+        return `${this.staticBaseUrl}/previews-ttv/live_user_${streamerName}-${sizesStr}.jpg?${new Date().getTime()}`;
     };
 };
 

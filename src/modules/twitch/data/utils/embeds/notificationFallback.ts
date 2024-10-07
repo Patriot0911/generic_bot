@@ -3,7 +3,7 @@ import Handlebars from 'handlebars';
 export default Handlebars.compile(JSON.stringify({
     title: "{{stream_title}}",
     author: {
-        name:   "[{{display_name}}] Twitch Notification",
+        name:   "{{display_name}}",
         url:    "{{stream_url}}",
         icon_url: "{{stream_thumbnail_url}}",
     },
