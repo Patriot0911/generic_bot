@@ -17,6 +17,12 @@ export default class notification {
         type: 'varchar',
         nullable: true,
     })
+    roleToMention?: string;
+
+    @Column({
+        type: 'varchar',
+        nullable: true,
+    })
     embed?: string;
 
     @Column({

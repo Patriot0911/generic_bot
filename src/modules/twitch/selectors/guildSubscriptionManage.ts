@@ -1,4 +1,4 @@
-import { ActionRowBuilder, APIEmbed, ButtonBuilder, ButtonStyle, StringSelectMenuInteraction, } from 'discord.js';
+import { ActionRowBuilder, APIEmbed, ButtonBuilder, ButtonStyle, RoleSelectMenuBuilder, StringSelectMenuInteraction, } from 'discord.js';
 import { TModuleContentInfo, } from '@/types/client';
 import { ModuleContentTypes, } from '@/constants';
 import { notification } from '@/entities/twitch';
@@ -29,7 +29,7 @@ export default async function (interaction: StringSelectMenuInteraction, client:
             ephemeral: true,
             content: 'Something went wrong',
         });
-    const { subscription, channelId, embed: embedData, webhook, } = selectedNotification;
+    const { subscription, channelId, embed: embedData, webhook, roleToMention, } = selectedNotification;
     const description =
         `**ID:** ${
             notificationId
@@ -60,9 +60,22 @@ export default async function (interaction: StringSelectMenuInteraction, client:
             style: ButtonStyle.Danger
         }),
     ]);
+    const selectedRole = roleToMention ? interaction.guild.roles.cache.get(roleToMention) : null;
+    const roleSelector = new RoleSelectMenuBuilder();
+    roleSelector.setCustomId(`roleToMentionTwitch|${notificationId}`);
+    roleSelector.setMaxValues(1);
+    roleSelector.setMinValues(0);
+    if(selectedRole)
+        roleSelector.setDefaultRoles([selectedRole.id]);
+    const selectorComponentRow = new ActionRowBuilder<RoleSelectMenuBuilder>()
+    .addComponents([
+        roleSelector,
+    ]);
     interaction.reply({
         embeds: [embed],
-        components: [componentRow],
+        components: [
+            componentRow, selectorComponentRow
+        ],
         ephemeral: true,
     });
 };

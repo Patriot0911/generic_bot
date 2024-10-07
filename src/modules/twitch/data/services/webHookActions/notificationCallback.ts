@@ -61,7 +61,6 @@ export default async (req: Request) => {
         };
     };
     for(const notification of subscriptionData.notifications) {
-        console.log(notification);
         if(!notification || !notification.guild)
             continue;
         const guild = req.client.guilds.cache.get(notification.guild.guildId);
@@ -73,24 +72,28 @@ export default async (req: Request) => {
         ) : guild.channels.cache.get(defaultChannelId);
         if(!channel || !channel.isTextBased())
             continue;
+        const role = notification.roleToMention && guild.roles.cache.get(notification.roleToMention);
         const embed = notification.embed ? createEmbedWithContext(notification.embed) : fallbackEmbed;
         if(notification.webhook) {
             axios.post(notification.webhook, {
-                content: null,
+                content: role ? `${role}` : null,
                 embeds: [embed],
             }).catch(
                 (e) => {
                     channel.send({
+                        content: role ? `${role}` : null,
                         embeds: [fallbackEmbed],
                     });
                 },
             );
         } else {
             channel.send({
+                content: role ? `${role}` : null,
                 embeds: [embed],
             }).catch(
                 (e) => {
                     channel.send({
+                        content: role ? `${role}` : null,
                         embeds: [fallbackEmbed],
                     });
                 }
