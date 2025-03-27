@@ -13,3 +13,8 @@ export const contentInfo: TModuleContentInfo = {
     type: ModuleContentTypes.Execute,
     event: ModuleExecuteEvents.OnModulesLoad,
 };
+const get = () => {
+    return 'qwe';
+};
+
+let t = get();

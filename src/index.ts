@@ -16,3 +16,16 @@ void async function loadClient() {
         process.exit();
     };
 }();
+
+const test: string = '';
+
+const test = test - queueMicrotask;
+
+test();
+
+const q = () => {
+    return 1 - 2;
+};
+const q2 = () => {
+    return 1 - 2;
+};
