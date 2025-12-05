@@ -25,6 +25,7 @@ export default async function (interaction: StringSelectMenuInteraction, client:
                 streamerName: true,
             },
         },
+        take: 25,
     });
     if(!subNotifications || subNotifications.length < 1)
         return interaction.reply({

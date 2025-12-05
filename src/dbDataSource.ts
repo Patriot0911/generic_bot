@@ -5,7 +5,7 @@ import { DataSource, } from 'typeorm';
 const entitiesPath = `${__dirname}/entities/**/*.entity{.js,.ts}`;
 const migrationsPath = `${__dirname}/migration/*`;
 
-const isProd = process.env.PRODUCTION === 'TRUE' ? true : false;
+const isProd = process.env.PRODUCTION === 'TRUE';
 const dbUrl = process.env.DATABASE_URL;
 
 const AppDataSource = new DataSource({
